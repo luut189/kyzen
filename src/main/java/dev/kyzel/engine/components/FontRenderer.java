@@ -2,7 +2,7 @@ package dev.kyzel.engine.components;
 
 import dev.kyzel.engine.Component;
 
-public class Font extends Component {
+public class FontRenderer extends Component {
 
     @Override
     public void start() {
