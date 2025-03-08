@@ -11,10 +11,9 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
 
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch> {
     // Vertex
     // ====
     // Pos              Color                           Tex Coords          Tex ID
@@ -42,8 +41,9 @@ public class RenderBatch {
     private int vaoID, vboID;
     private final int maxBatchSize;
     private final Shader shader;
+    private int zIndex;
 
-    public RenderBatch(int maxBatchSize) {
+    public RenderBatch(int maxBatchSize, int zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
         sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -52,6 +52,7 @@ public class RenderBatch {
         numSprites = 0;
         hasRoom = true;
         textures = new ArrayList<>();
+        this.zIndex = zIndex;
     }
 
     public void start() {
@@ -94,9 +95,21 @@ public class RenderBatch {
         }
     }
 
+
     public void render() {
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        boolean rebufferData = false;
+        for (int i = 0; i < numSprites; i++) {
+            SpriteRenderer sprite = sprites[i];
+            if (sprite.isDirty()) {
+                loadVertexProperties(i);
+                sprite.setClean();
+                rebufferData = true;
+            }
+        }
+        if (rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
 
         shader.use();
         shader.uploadMatrix4f("uProjection", SceneManager.getCurrentScene().getCamera().getProjectionMatrix());
@@ -205,5 +218,14 @@ public class RenderBatch {
 
     public boolean hasTexture(Texture texture) {
         return textures.contains(texture);
+    }
+
+    public int getzIndex() {
+        return zIndex;
+    }
+
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(zIndex, o.getzIndex());
     }
 }
