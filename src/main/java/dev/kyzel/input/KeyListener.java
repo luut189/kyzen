@@ -1,11 +1,10 @@
 package dev.kyzel.input;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyListener {
     private static KeyListener instance;
-    private boolean[] keyPressed = new boolean[350];
+    private boolean[] keyPressed = new boolean[GLFW_KEY_LAST + 1];
 
     private KeyListener() {
     }

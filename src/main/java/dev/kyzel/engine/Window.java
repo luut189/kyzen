@@ -25,9 +25,9 @@ public class Window {
         this.width = width;
         this.height = height;
         this.title = title;
-        this.r = 1;
-        this.g = 1;
-        this.b = 1;
+        this.r = 0;
+        this.g = 0;
+        this.b = 0;
         this.a = 1;
     }
 
@@ -36,6 +36,28 @@ public class Window {
             Window.window = new Window(width, height, title);
         }
         return window;
+    }
+
+    public static Window get() {
+        if (window == null) {
+            throw new RuntimeException("Window not initialized");
+        }
+        return window;
+    }
+
+    public static long getWindow() {
+        if (window == null) {
+            throw new RuntimeException("Window not initialized");
+        }
+        return get().glfwWindow;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void run() {
@@ -79,6 +101,9 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         SceneManager.changeScene(0);
     }
