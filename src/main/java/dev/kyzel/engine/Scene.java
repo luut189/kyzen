@@ -15,7 +15,8 @@ public abstract class Scene {
     protected Renderer renderer = new Renderer();
     private boolean isRunning = false;
 
-    public Scene() {}
+    public Scene() {
+    }
 
     public void init() {
 

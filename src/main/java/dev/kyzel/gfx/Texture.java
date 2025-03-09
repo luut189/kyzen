@@ -33,22 +33,29 @@ public class Texture {
         IntBuffer channels = BufferUtils.createIntBuffer(1);
         ByteBuffer image = stbi_load(path, width, height, channels, 0);
 
-        if (image != null) {
-            this.width = width.get(0);
-            this.height = height.get(0);
+        assert image != null : "Error: Could not load texture: " + path;
 
-            if (channels.get(0) == 3) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-            } else if (channels.get(0) == 4) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-            } else {
-                assert false : "Error: (Textures) Unknown number of channels: " + channels.get(0);
-            }
+        this.width = width.get(0);
+        this.height = height.get(0);
+
+        if (channels.get(0) == 3) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        } else if (channels.get(0) == 4) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         } else {
-            assert false : "Error: Could not load texture: " + path;
+            assert false : "Error: (Textures) Unknown number of channels: " + channels.get(0);
         }
 
         stbi_image_free(image);
+    }
+
+    public Texture(int width, int height) {
+        textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
     public void bind() {
@@ -57,6 +64,10 @@ public class Texture {
 
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public int getTextureID() {
+        return textureID;
     }
 
     public int getWidth() {

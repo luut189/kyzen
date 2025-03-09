@@ -6,7 +6,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -17,7 +16,6 @@ public class Window {
     private final int width, height;
     private final String title;
     private long glfwWindow;
-    private float r, g, b, a;
 
     private static Window window = null;
 
@@ -25,10 +23,6 @@ public class Window {
         this.width = width;
         this.height = height;
         this.title = title;
-        this.r = 0;
-        this.g = 0;
-        this.b = 0;
-        this.a = 1;
     }
 
     public static Window get(int width, int height, String title) {
@@ -101,7 +95,6 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -112,14 +105,13 @@ public class Window {
         float beginTime = (float) glfwGetTime();
         float endTime;
         float deltaTime = -1.0f;
+        boolean wireframe = false;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
-            glClearColor(r, g, b, a);
-            glClear(GL_COLOR_BUFFER_BIT);
-
             if (deltaTime > 0.0f) {
+                System.out.println("FPS: " + Math.floor(1f / deltaTime));
                 SceneManager.updateScene(deltaTime);
             }
 

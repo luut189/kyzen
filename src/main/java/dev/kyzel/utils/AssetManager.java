@@ -8,10 +8,17 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+
 public class AssetManager {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
     private static Map<String, Spritesheet> spritesheets = new HashMap<>();
+    private static int quadVAO, quadVBO;
 
     public static Shader getShader(String name) {
         File file = new File(name);
@@ -47,5 +54,34 @@ public class AssetManager {
         File file = new File(name);
         assert spritesheets.containsKey(file.getAbsolutePath()) : "Error: Spritesheet not found";
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
+    public static int getQuadVAO() {
+        float[] quadVertices = {
+                // positions   // texCoords
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                -1.0f, -1.0f,  0.0f, 0.0f,
+                 1.0f, -1.0f,  1.0f, 0.0f,
+
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                 1.0f, -1.0f,  1.0f, 0.0f,
+                 1.0f,  1.0f,  1.0f, 1.0f
+        };
+        if (quadVAO == 0) {
+            quadVAO = glGenVertexArrays();
+            quadVBO = glGenBuffers();
+            glBindVertexArray(quadVAO);
+            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+            glBufferData(GL_ARRAY_BUFFER, quadVertices, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0L);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2L * Float.BYTES);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+        }
+
+        return quadVAO;
     }
 }

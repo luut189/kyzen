@@ -1,5 +1,6 @@
 package dev.kyzel.gfx;
 
+import dev.kyzel.engine.Window;
 import dev.kyzel.engine.components.SpriteRenderer;
 import dev.kyzel.engine.SceneManager;
 import dev.kyzel.utils.AssetManager;
@@ -40,11 +41,14 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private List<Texture> textures;
     private int vaoID, vboID;
     private final int maxBatchSize;
-    private final Shader shader;
+    private final Shader shader, screenShader;
     private int zIndex;
+
+    Framebuffer defaultFramebuffer;
 
     public RenderBatch(int maxBatchSize, int zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
+        screenShader = AssetManager.getShader("assets/shaders/screen.glsl");
         sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
@@ -53,6 +57,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
         hasRoom = true;
         textures = new ArrayList<>();
         this.zIndex = zIndex;
+
+        defaultFramebuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
     }
 
     public void start() {
@@ -97,6 +103,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
 
     public void render() {
+        defaultFramebuffer.bind();
+        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
         boolean rebufferData = false;
         for (int i = 0; i < numSprites; i++) {
             SpriteRenderer sprite = sprites[i];
@@ -131,14 +141,35 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
-        glEnableVertexAttribArray(3);
+        glDisableVertexAttribArray(3);
         glBindVertexArray(0);
 
         for (Texture texture : textures) {
             texture.unbind();
         }
 
+        defaultFramebuffer.unbind();
+
+        renderToScreen();
+
         shader.detach();
+    }
+
+    private void renderToScreen() {
+        glClearColor(1f, 1f, 1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        screenShader.use();
+        screenShader.uploadInt("screenTexture", 0);
+        glDisable(GL_DEPTH_TEST);
+        glActiveTexture(GL_TEXTURE0);
+        glBindVertexArray(AssetManager.getQuadVAO());
+        glBindTexture(GL_TEXTURE_2D, defaultFramebuffer.getTextureID());
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        screenShader.detach();
     }
 
     private void loadVertexProperties(int index) {
