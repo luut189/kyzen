@@ -2,6 +2,7 @@ package dev.kyzel.engine;
 
 import dev.kyzel.input.KeyListener;
 import dev.kyzel.input.MouseListener;
+import dev.kyzel.utils.AssetManager;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -13,9 +14,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Window {
-    private final int width, height;
+    private int targetWidth, targetHeight;
+    private int width, height;
     private final String title;
     private long glfwWindow;
+    private float targetAspectRatio = 16f / 9f;
 
     private static Window window = null;
 
@@ -95,8 +98,18 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        glfwSetFramebufferSizeCallback(glfwWindow, this::windowSizeCallback);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        this.targetWidth = vidMode.width();
+        this.targetHeight = vidMode.height();
+        this.targetAspectRatio = (float) this.targetWidth / (float) this.targetHeight;
+
+        AssetManager.getFramebuffer("default", targetWidth, targetHeight);
 
         SceneManager.changeScene(0);
     }
@@ -105,13 +118,12 @@ public class Window {
         float beginTime = (float) glfwGetTime();
         float endTime;
         float deltaTime = -1.0f;
-        boolean wireframe = false;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
             if (deltaTime > 0.0f) {
-                System.out.println("FPS: " + Math.floor(1f / deltaTime));
+//                System.out.println("FPS: " + Math.floor(1f / deltaTime));
                 SceneManager.updateScene(deltaTime);
             }
 
@@ -121,6 +133,31 @@ public class Window {
             deltaTime = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+
+    private void windowSizeCallback(long window, int screenWidth, int screenHeight) {
+        if (screenWidth == 0 || screenHeight == 0) {
+            return;
+        }
+        this.width = screenWidth;
+        this.height = screenHeight;
+
+        System.out.println("Screen size: " + screenWidth + "x" + screenHeight);
+
+        int aspectWidth = screenWidth;
+        int aspectHeight = (int) ((float) aspectWidth / targetAspectRatio);
+        if (aspectHeight > screenHeight) {
+            aspectHeight = screenHeight;
+            aspectWidth = (int) ((float) aspectHeight * targetAspectRatio);
+        }
+
+        // Center rectangle
+        int vpX = (int) (((float) screenWidth / 2f) - ((float) aspectWidth / 2f));
+        int vpY = (int) (((float) screenHeight / 2f) - ((float) aspectHeight / 2f));
+
+        glViewport(vpX, vpY, aspectWidth, aspectHeight);
+
+        AssetManager.resizeFramebuffer("default", aspectWidth, aspectHeight);
     }
 
 }

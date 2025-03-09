@@ -58,7 +58,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
         textures = new ArrayList<>();
         this.zIndex = zIndex;
 
-        defaultFramebuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
+        defaultFramebuffer =
+                AssetManager.getFramebuffer("default", Window.get().getWidth(), Window.get().getHeight());
     }
 
     public void start() {

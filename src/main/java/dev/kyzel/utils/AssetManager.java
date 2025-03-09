@@ -1,6 +1,7 @@
 package dev.kyzel.utils;
 
 import dev.kyzel.engine.components.Spritesheet;
+import dev.kyzel.gfx.Framebuffer;
 import dev.kyzel.gfx.Shader;
 import dev.kyzel.gfx.Texture;
 
@@ -18,6 +19,7 @@ public class AssetManager {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
     private static Map<String, Spritesheet> spritesheets = new HashMap<>();
+    private static Map<String, Framebuffer> framebuffers = new HashMap<>();
     private static int quadVAO, quadVBO;
 
     public static Shader getShader(String name) {
@@ -54,6 +56,21 @@ public class AssetManager {
         File file = new File(name);
         assert spritesheets.containsKey(file.getAbsolutePath()) : "Error: Spritesheet not found";
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
+    public static Framebuffer getFramebuffer(String name, int width, int height) {
+        if (framebuffers.containsKey(name)) {
+            return framebuffers.get(name);
+        }
+        Framebuffer framebuffer = new Framebuffer(width, height);
+        framebuffers.put(name, framebuffer);
+        return framebuffer;
+    }
+
+    public static void resizeFramebuffer(String name, int width, int height) {
+        assert framebuffers.containsKey(name) : "Error: Framebuffer not found";
+
+        framebuffers.get(name).resize(width, height);
     }
 
     public static int getQuadVAO() {

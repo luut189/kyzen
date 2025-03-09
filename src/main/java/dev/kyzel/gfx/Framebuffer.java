@@ -24,6 +24,22 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    public void resize(int width, int height) {
+        glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+
+        this.texture = new Texture(width, height);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getTextureID(), 0);
+
+        rboID = glGenRenderbuffers();
+        glBindRenderbuffer(GL_RENDERBUFFER, rboID);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboID);
+
+        assert glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE : "Error: Framebuffer is not complete.";
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, fboID);
     }
