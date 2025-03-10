@@ -13,13 +13,13 @@ void main()
 
 #type fragment
 #version 330 core
-out vec4 FragColor;
-
 in vec2 TexCoords;
+out vec4 FragColor;
 
 uniform sampler2D screenTexture;
 
-void main()
-{
-    FragColor = texture(screenTexture, TexCoords);
+void main() {
+    vec4 color = texture(screenTexture, TexCoords);
+    if (color.a < 0.01) discard;  // Discard fully transparent pixels
+    FragColor = color;
 }

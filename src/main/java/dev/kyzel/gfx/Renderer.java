@@ -1,5 +1,6 @@
 package dev.kyzel.gfx;
 
+import dev.kyzel.engine.components.LightComponent;
 import dev.kyzel.engine.components.SpriteRenderer;
 import dev.kyzel.engine.GameObject;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class Renderer {
     private final int MAX_BATCH_SIZE = 100;
-    private List<RenderBatch> batches;
+    private final List<RenderBatch> batches;
 
     public Renderer() {
         batches = new ArrayList<>();
@@ -19,6 +20,10 @@ public class Renderer {
         SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
         if (spr != null) {
             add(spr);
+        }
+        LightComponent light = gameObject.getComponent(LightComponent.class);
+        if (light != null) {
+            LightRenderBatch.getInstance().addLight(light);
         }
     }
 

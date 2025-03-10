@@ -1,6 +1,5 @@
 package dev.kyzel.gfx;
 
-import dev.kyzel.engine.Window;
 import dev.kyzel.engine.components.SpriteRenderer;
 import dev.kyzel.engine.SceneManager;
 import dev.kyzel.utils.AssetManager;
@@ -10,8 +9,6 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class RenderBatch implements Comparable<RenderBatch> {
@@ -38,11 +35,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final float[] vertices;
     private final int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
-    private List<Texture> textures;
+    private final List<Texture> textures;
     private int vaoID, vboID;
     private final int maxBatchSize;
     private final Shader shader, screenShader;
-    private int zIndex;
+    private final int zIndex;
 
     Framebuffer defaultFramebuffer;
 
@@ -59,7 +56,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         this.zIndex = zIndex;
 
         defaultFramebuffer =
-                AssetManager.getFramebuffer("default", Window.get().getWidth(), Window.get().getHeight());
+                AssetManager.getFramebuffer("default");
     }
 
     public void start() {
@@ -104,10 +101,20 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
 
     public void render() {
-        defaultFramebuffer.bind();
+        renderToFramebuffer(defaultFramebuffer);
+
+        renderFromFramebufferToScreen(defaultFramebuffer);
+
+        shader.detach();
+    }
+
+    private void renderToFramebuffer(Framebuffer framebuffer) {
+        framebuffer.bind();
         glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         boolean rebufferData = false;
         for (int i = 0; i < numSprites; i++) {
             SpriteRenderer sprite = sprites[i];
@@ -149,23 +156,21 @@ public class RenderBatch implements Comparable<RenderBatch> {
             texture.unbind();
         }
 
-        defaultFramebuffer.unbind();
+        LightRenderBatch.getInstance().render();
 
-        renderToScreen();
-
-        shader.detach();
+        framebuffer.unbind();
     }
 
-    private void renderToScreen() {
-        glClearColor(1f, 1f, 1f, 1.0f);
+    private void renderFromFramebufferToScreen(Framebuffer framebuffer) {
+        glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         screenShader.use();
         screenShader.uploadInt("screenTexture", 0);
         glDisable(GL_DEPTH_TEST);
         glActiveTexture(GL_TEXTURE0);
-        glBindVertexArray(AssetManager.getQuadVAO());
-        glBindTexture(GL_TEXTURE_2D, defaultFramebuffer.getTextureID());
+        glBindVertexArray(AssetManager.getFullScreenQuadVAO());
+        glBindTexture(GL_TEXTURE_2D, framebuffer.getTextureID());
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindVertexArray(0);

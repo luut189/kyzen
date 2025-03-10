@@ -16,11 +16,11 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class AssetManager {
-    private static Map<String, Shader> shaders = new HashMap<>();
-    private static Map<String, Texture> textures = new HashMap<>();
-    private static Map<String, Spritesheet> spritesheets = new HashMap<>();
-    private static Map<String, Framebuffer> framebuffers = new HashMap<>();
-    private static int quadVAO, quadVBO;
+    private static final Map<String, Shader> shaders = new HashMap<>();
+    private static final Map<String, Texture> textures = new HashMap<>();
+    private static final Map<String, Spritesheet> spritesheets = new HashMap<>();
+    private static final Map<String, Framebuffer> framebuffers = new HashMap<>();
+    private static int fullScreenQuadVAO, fullScreenQuadVBO;
 
     public static Shader getShader(String name) {
         File file = new File(name);
@@ -58,22 +58,25 @@ public class AssetManager {
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
     }
 
-    public static Framebuffer getFramebuffer(String name, int width, int height) {
+    public static void createFramebuffer(String name, int width, int height) {
         if (framebuffers.containsKey(name)) {
-            return framebuffers.get(name);
+            framebuffers.get(name).resize(width, height);
         }
         Framebuffer framebuffer = new Framebuffer(width, height);
         framebuffers.put(name, framebuffer);
-        return framebuffer;
+    }
+
+    public static Framebuffer getFramebuffer(String name) {
+        assert framebuffers.containsKey(name) : "Error: Framebuffer not found";
+        return framebuffers.get(name);
     }
 
     public static void resizeFramebuffer(String name, int width, int height) {
         assert framebuffers.containsKey(name) : "Error: Framebuffer not found";
-
         framebuffers.get(name).resize(width, height);
     }
 
-    public static int getQuadVAO() {
+    public static int getFullScreenQuadVAO() {
         float[] quadVertices = {
                 // positions   // texCoords
                 -1.0f,  1.0f,  0.0f, 1.0f,
@@ -84,11 +87,11 @@ public class AssetManager {
                  1.0f, -1.0f,  1.0f, 0.0f,
                  1.0f,  1.0f,  1.0f, 1.0f
         };
-        if (quadVAO == 0) {
-            quadVAO = glGenVertexArrays();
-            quadVBO = glGenBuffers();
-            glBindVertexArray(quadVAO);
-            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        if (fullScreenQuadVAO == 0) {
+            fullScreenQuadVAO = glGenVertexArrays();
+            fullScreenQuadVBO = glGenBuffers();
+            glBindVertexArray(fullScreenQuadVAO);
+            glBindBuffer(GL_ARRAY_BUFFER, fullScreenQuadVBO);
             glBufferData(GL_ARRAY_BUFFER, quadVertices, GL_STATIC_DRAW);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0L);
@@ -99,6 +102,6 @@ public class AssetManager {
             glBindVertexArray(0);
         }
 
-        return quadVAO;
+        return fullScreenQuadVAO;
     }
 }

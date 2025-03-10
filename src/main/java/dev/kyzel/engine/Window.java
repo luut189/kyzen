@@ -3,6 +3,7 @@ package dev.kyzel.engine;
 import dev.kyzel.input.KeyListener;
 import dev.kyzel.input.MouseListener;
 import dev.kyzel.utils.AssetManager;
+import dev.kyzel.utils.Debug;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -14,7 +15,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Window {
-    private int targetWidth, targetHeight;
     private int width, height;
     private final String title;
     private long glfwWindow;
@@ -104,12 +104,13 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        this.targetWidth = vidMode.width();
-        this.targetHeight = vidMode.height();
-        this.targetAspectRatio = (float) this.targetWidth / (float) this.targetHeight;
+        int[] targetWidth = new int[1];
+        int[] targetHeight = new int[1];
+        glfwGetFramebufferSize(glfwWindow, targetWidth, targetHeight);
 
-        AssetManager.getFramebuffer("default", targetWidth, targetHeight);
+        this.targetAspectRatio = (float) targetWidth[0] / (float) targetHeight[0];
+        glViewport(0, 0, targetWidth[0], targetHeight[0]);
+        AssetManager.createFramebuffer("default", targetWidth[0], targetHeight[0]);
 
         SceneManager.changeScene(0);
     }
@@ -122,8 +123,14 @@ public class Window {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
+
             if (deltaTime > 0.0f) {
-//                System.out.println("FPS: " + Math.floor(1f / deltaTime));
+                if (KeyListener.isKeyPressed(GLFW_KEY_Z)) {
+                    Debug.setDebug(true);
+                } else if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
+                    Debug.setDebug(false);
+                }
+                Debug.debugLog("FPS: " + Math.floor(1f / deltaTime));
                 SceneManager.updateScene(deltaTime);
             }
 
@@ -142,7 +149,7 @@ public class Window {
         this.width = screenWidth;
         this.height = screenHeight;
 
-        System.out.println("Screen size: " + screenWidth + "x" + screenHeight);
+        Debug.debugLog("Screen size: " + screenWidth + "x" + screenHeight);
 
         int aspectWidth = screenWidth;
         int aspectHeight = (int) ((float) aspectWidth / targetAspectRatio);

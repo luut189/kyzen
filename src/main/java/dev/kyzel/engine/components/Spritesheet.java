@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spritesheet {
-    private Texture texture;
-    private List<Sprite> sprites;
+    private final Texture texture;
+    private final List<Sprite> sprites;
 
     public Spritesheet(Texture texture, int numSprites, int spriteWidth, int spriteHeight, int spacing) {
         this.texture = texture;

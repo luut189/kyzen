@@ -5,11 +5,11 @@ import java.util.List;
 
 public class GameObject {
 
-    private String name;
-    private List<Component> componentList;
+    private final String name;
+    private final List<Component> componentList;
     public Transform transform;
 
-    private int zIndex;
+    private final int zIndex;
 
     public GameObject(String name) {
         this.name = name;

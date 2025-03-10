@@ -1,7 +1,7 @@
 package dev.kyzel.engine;
 
 public class SceneManager {
-    private static Scene[] scenes = {new LevelScene()};
+    private static final Scene[] scenes = {new LevelScene()};
     private static Scene currentScene;
 
     public static void updateScene(float delta) {

@@ -1,10 +1,10 @@
 package dev.kyzel.gfx;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Framebuffer {
-    private int fboID, rboID;
+    private final int fboID;
+    private int rboID;
     private Texture texture;
 
     public Framebuffer(int width, int height) {
