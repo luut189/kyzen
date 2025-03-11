@@ -58,12 +58,14 @@ public class AssetManager {
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
     }
 
-    public static void createFramebuffer(String name, int width, int height) {
+    public static Framebuffer createFramebuffer(String name, int width, int height) {
         if (framebuffers.containsKey(name)) {
             framebuffers.get(name).resize(width, height);
+            return framebuffers.get(name);
         }
         Framebuffer framebuffer = new Framebuffer(width, height);
         framebuffers.put(name, framebuffer);
+        return framebuffer;
     }
 
     public static Framebuffer getFramebuffer(String name) {
