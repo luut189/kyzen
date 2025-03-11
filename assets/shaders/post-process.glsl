@@ -17,8 +17,6 @@ out vec4 FragColor;
 
 uniform sampler2D uScene;
 uniform sampler2D uBloom;
-uniform float uBloomStrength;
-uniform float uGamma;
 
 void main() {
     // Make sure we're sampling using the correct texture coordinates
@@ -26,10 +24,7 @@ void main() {
     vec3 bloomColor = texture(uBloom, TexCoords).rgb;
 
     // Add bloom to the scene color
-    vec3 finalColor = sceneColor + (bloomColor * uBloomStrength);
-
-    // Apply gamma correction
-    finalColor = pow(finalColor, vec3(1.0 / uGamma));
+    vec3 finalColor = sceneColor + bloomColor;
 
     FragColor = vec4(finalColor, 1.0);
 }

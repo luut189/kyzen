@@ -103,6 +103,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
     public void render() {
         renderToFramebuffer(defaultFramebuffer);
 
+        LightRenderer.getInstance().renderToFramebuffer(defaultFramebuffer);
+
         renderFromFramebufferToScreen(defaultFramebuffer);
 
         shader.detach();
@@ -110,7 +112,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     private void renderToFramebuffer(Framebuffer framebuffer) {
         framebuffer.bind();
-        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -156,13 +157,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
             texture.unbind();
         }
 
-        LightRenderer.getInstance().render();
-
         framebuffer.unbind();
     }
 
     private void renderFromFramebufferToScreen(Framebuffer framebuffer) {
-        glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         screenShader.use();

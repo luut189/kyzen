@@ -168,6 +168,7 @@ public class Window {
         glViewport(vpX, vpY, aspectWidth, aspectHeight);
 
         AssetManager.resizeFramebuffer("default", aspectWidth, aspectHeight);
+        LightRenderer.getInstance().resize(aspectWidth, aspectHeight);
     }
 
 }
