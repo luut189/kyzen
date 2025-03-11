@@ -6,8 +6,8 @@ import org.joml.Vector3f;
 
 public class LightTile extends Tile {
 
-    public LightTile(String name, Transform transform, int zIndex, Vector3f color, float intensity) {
-        super(name, transform, zIndex);
+    public LightTile(Transform transform, int zIndex, Vector3f color, float intensity) {
+        super(transform, zIndex);
         this.addComponent(new LightComponent(transform.scale.x, color, intensity));
     }
 }

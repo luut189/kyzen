@@ -1,25 +1,20 @@
 package dev.kyzel.engine;
 
+import dev.kyzel.utils.AssetManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
 
-    private final String name;
+    private final int id;
     private final List<Component> componentList;
-    public Transform transform;
+    public final Transform transform;
 
     private final int zIndex;
 
-    public GameObject(String name) {
-        this.name = name;
-        this.componentList = new ArrayList<>();
-        this.transform = new Transform();
-        this.zIndex = 0;
-    }
-
-    public GameObject(String name, Transform transform, int zIndex) {
-        this.name = name;
+    public GameObject(Transform transform, int zIndex) {
+        this.id = AssetManager.getNextID();
         this.componentList = new ArrayList<>();
         this.transform = transform;
         this.zIndex = zIndex;
@@ -31,7 +26,6 @@ public class GameObject {
                 try {
                     return componentClass.cast(component);
                 } catch (ClassCastException e) {
-                    e.printStackTrace();
                     assert false : componentClass + " is not a subclass of " + componentClass.getName();
                 }
             }
@@ -63,6 +57,10 @@ public class GameObject {
         for (Component component : componentList) {
             component.update(deltaTime);
         }
+    }
+
+    public int getID() {
+        return id;
     }
 
     public int getzIndex() {

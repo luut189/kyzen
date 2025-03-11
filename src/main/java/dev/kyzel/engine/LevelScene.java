@@ -24,7 +24,7 @@ public class LevelScene extends Scene {
 
         sprites = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-        obj1 = new GameObject("Object1", new Transform(new Vector2f(100, 100), new Vector2f(objectScale)), -1);
+        obj1 = new GameObject(new Transform(new Vector2f(100, 100), new Vector2f(objectScale)), -1);
         obj1.addComponent(new SpriteComponent(sprites.getSprite(0)));
         this.addGameObject(obj1);
 
@@ -34,14 +34,11 @@ public class LevelScene extends Scene {
                 y += 100;
                 x = 0;
             }
-            GameObject o = new LightTile("light" + i,
-                    new Transform(new Vector2f(x, y),
-                            new Vector2f(objectScale)),
-                    -1,
-                    new Vector3f((float) Math.random(),
-                            (float) Math.random(),
-                            (float) Math.random()),
-                    1f);
+            GameObject o = new LightTile(new Transform(new Vector2f(x, y),
+                                         new Vector2f(objectScale)), -1,
+                                         new Vector3f((float) Math.random(),
+                                                      (float) Math.random(),
+                                                      (float) Math.random()), 1f);
             this.addGameObject(o);
             x += 100;
         }

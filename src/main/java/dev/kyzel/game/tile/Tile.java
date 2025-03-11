@@ -5,11 +5,8 @@ import dev.kyzel.engine.Transform;
 
 public class Tile extends GameObject {
 
-    public Tile(String name) {
-        super(name);
+    public Tile(Transform transform, int zIndex) {
+        super(transform, zIndex);
     }
 
-    public Tile(String name, Transform transform, int zIndex) {
-        super(name, transform, zIndex);
-    }
 }

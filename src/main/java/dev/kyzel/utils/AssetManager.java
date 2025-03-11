@@ -16,11 +16,16 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class AssetManager {
+    private static int currentID = 0;
     private static final Map<String, Shader> shaders = new HashMap<>();
     private static final Map<String, Texture> textures = new HashMap<>();
     private static final Map<String, Spritesheet> spritesheets = new HashMap<>();
     private static final Map<String, Framebuffer> framebuffers = new HashMap<>();
     private static int fullScreenQuadVAO, fullScreenQuadVBO;
+
+    public static int getNextID() {
+        return currentID++;
+    }
 
     public static Shader getShader(String name) {
         File file = new File(name);
@@ -71,11 +76,6 @@ public class AssetManager {
     public static Framebuffer getFramebuffer(String name) {
         assert framebuffers.containsKey(name) : "Error: Framebuffer not found";
         return framebuffers.get(name);
-    }
-
-    public static void resizeFramebuffer(String name, int width, int height) {
-        assert framebuffers.containsKey(name) : "Error: Framebuffer not found";
-        framebuffers.get(name).resize(width, height);
     }
 
     public static int getFullScreenQuadVAO() {
