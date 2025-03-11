@@ -107,6 +107,8 @@ public class Window {
         int[] targetWidth = new int[1];
         int[] targetHeight = new int[1];
         glfwGetFramebufferSize(glfwWindow, targetWidth, targetHeight);
+        this.width = targetWidth[0];
+        this.height = targetHeight[0];
 
         this.targetAspectRatio = (float) targetWidth[0] / (float) targetHeight[0];
         glViewport(0, 0, targetWidth[0], targetHeight[0]);
@@ -123,14 +125,13 @@ public class Window {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
-
             if (deltaTime > 0.0f) {
                 if (KeyListener.isKeyPressed(GLFW_KEY_Z)) {
                     Debug.setDebug(true);
                 } else if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
                     Debug.setDebug(false);
                 }
-                Debug.debugLog("FPS: " + Math.floor(1f / deltaTime));
+                Debug.log("FPS: " + Math.floor(1f / deltaTime));
                 SceneManager.updateScene(deltaTime);
             }
 
@@ -149,7 +150,7 @@ public class Window {
         this.width = screenWidth;
         this.height = screenHeight;
 
-        Debug.debugLog("Screen size: " + screenWidth + "x" + screenHeight);
+        Debug.log("Screen size: " + screenWidth + "x" + screenHeight);
 
         int aspectWidth = screenWidth;
         int aspectHeight = (int) ((float) aspectWidth / targetAspectRatio);
