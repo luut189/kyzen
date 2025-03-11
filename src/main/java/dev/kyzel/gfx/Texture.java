@@ -9,13 +9,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    private String path;
     private int width;
     private int height;
     private final int textureID;
 
     public Texture(String path) {
-        this.path = path;
         textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
 

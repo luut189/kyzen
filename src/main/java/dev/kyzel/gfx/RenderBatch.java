@@ -42,7 +42,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final Shader shader, screenShader;
     private final int zIndex;
 
-    Framebuffer defaultFramebuffer;
+    private final Framebuffer defaultFramebuffer;
 
     public RenderBatch(int maxBatchSize, int zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
@@ -121,16 +121,16 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        boolean rebufferData = false;
+        boolean needReBuffer = false;
         for (int i = 0; i < numSprites; i++) {
             SpriteComponent sprite = sprites[i];
             if (sprite.isDirty()) {
                 loadVertexProperties(i);
                 sprite.setClean();
-                rebufferData = true;
+                needReBuffer = true;
             }
         }
-        if (rebufferData) {
+        if (needReBuffer) {
             glBindBuffer(GL_ARRAY_BUFFER, vboID);
             glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
         }

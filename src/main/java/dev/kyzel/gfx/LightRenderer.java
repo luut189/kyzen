@@ -20,7 +20,7 @@ public class LightRenderer {
     private static LightRenderer instance;
     private final List<LightComponent> lights;
     private final Shader lightShader, blurShader, postProcessShader;
-    private Framebuffer lightFramebuffer;
+    private final Framebuffer lightFramebuffer;
     private final Framebuffer[] blurFramebuffers = new Framebuffer[2];
 
     private LightRenderer() {

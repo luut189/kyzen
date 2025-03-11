@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spritesheet {
-    private final Texture texture;
     private final List<Sprite> sprites;
 
     public Spritesheet(Texture texture, int numSprites, int spriteWidth, int spriteHeight, int spacing) {
-        this.texture = texture;
         this.sprites = new ArrayList<>();
         int currentX = 0;
         int currentY = texture.getHeight() - spriteHeight;

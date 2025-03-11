@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 public class Camera {
     private final Matrix4f projectionMatrix;
     private final Matrix4f viewMatrix;
-    public Vector2f position;
+    public final Vector2f position;
     private float zoom = 1.0f; // Default zoom level
 
     public Camera(Vector2f position) {

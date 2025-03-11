@@ -12,8 +12,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public abstract class Scene {
 
     protected Camera camera;
-    protected List<GameObject> gameObjectList = new ArrayList<>();
-    protected Renderer renderer = new Renderer();
+    protected final List<GameObject> gameObjectList = new ArrayList<>();
+    protected final Renderer renderer = new Renderer();
     private boolean isRunning = false;
 
     public Scene() {

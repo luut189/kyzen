@@ -48,7 +48,6 @@ public class Shader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
             assert false : "Error: Could not open file for shader: " + path;
         }
 
