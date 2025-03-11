@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: dev.kyzel.Main
+Class-Path: lwjgl-opengl-3.3.6.jar lwjgl-openal-3.3.6-natives-windows.ja
+ r joml-1.10.7.jar lwjgl-glfw-3.3.6.jar lwjgl-assimp-3.3.6-natives-windo
+ ws.jar lwjgl-openal-3.3.6.jar lwjgl-assimp-3.3.6.jar lwjgl-3.3.6-native
+ s-windows.jar lwjgl-stb-3.3.6-natives-windows.jar lwjgl-stb-3.3.6.jar l
+ wjgl-opengl-3.3.6-natives-windows.jar lwjgl-glfw-3.3.6-natives-windows.
+ jar lwjgl-3.3.6.jar
+
