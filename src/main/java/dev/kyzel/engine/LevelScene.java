@@ -28,16 +28,22 @@ public class LevelScene extends Scene {
         obj1.addComponent(new SpriteComponent(sprites.getSprite(0)));
         this.addGameObject(obj1);
 
-        for (int i = 0; i < 10; i++) {
+        int x = 0, y = 0;
+        for (int i = 0; i < 100; i++) {
+            if (i % 10 == 0) {
+                y += 100;
+                x = 0;
+            }
             GameObject o = new LightTile("light" + i,
-                                        new Transform(new Vector2f((i + 1) * 100, 100),
-                                                      new Vector2f(objectScale)),
-                                        -1,
-                                        new Vector3f((float) Math.random() * i,
-                                                     (float) Math.random() * i,
-                                                     (float) Math.random() * i),
-                                0.4f);
+                    new Transform(new Vector2f(x, y),
+                            new Vector2f(objectScale)),
+                    -1,
+                    new Vector3f((float) Math.random(),
+                            (float) Math.random(),
+                            (float) Math.random()),
+                    1f);
             this.addGameObject(o);
+            x += 100;
         }
 
     }
