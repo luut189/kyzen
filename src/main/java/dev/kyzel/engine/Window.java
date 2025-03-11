@@ -110,9 +110,6 @@ public class Window {
 
         glfwSetFramebufferSizeCallback(glfwWindow, this::windowSizeCallback);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
         int[] targetWidth = new int[1];
         int[] targetHeight = new int[1];
         glfwGetFramebufferSize(glfwWindow, targetWidth, targetHeight);

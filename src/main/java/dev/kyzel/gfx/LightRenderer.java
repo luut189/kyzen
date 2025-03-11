@@ -109,7 +109,11 @@ public class LightRenderer {
         int amount = 2;
         for (int i = 0; i < amount; i++) {
             blurFramebuffers[horizontal ? 0 : 1].bind();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDisable(GL_DEPTH_TEST);
             blurShader.uploadInt("horizontal", horizontal ? 1 : 0);
+            glActiveTexture(GL_TEXTURE0);
+            blurShader.uploadTexture("image", 0);
             glBindTexture(GL_TEXTURE_2D, firsIteration ? lightFramebuffer.getTextureID() :
                     blurFramebuffers[horizontal ? 0 : 1].getTextureID());
             renderFullscreenQuad();

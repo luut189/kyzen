@@ -39,14 +39,13 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final List<Texture> textures;
     private int vaoID, vboID;
     private final int maxBatchSize;
-    private final Shader shader, screenShader;
+    private final Shader shader;
     private final int zIndex;
 
-    private final Framebuffer defaultFramebuffer;
+    private final Framebuffer renderBuffer;
 
     public RenderBatch(int maxBatchSize, int zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
-        screenShader = AssetManager.getShader("assets/shaders/screen.glsl");
         sprites = new SpriteComponent[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
@@ -56,8 +55,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         textures = new ArrayList<>();
         this.zIndex = zIndex;
 
-        defaultFramebuffer =
-                AssetManager.getFramebuffer("default");
+        renderBuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
     }
 
     public void start() {
@@ -103,14 +101,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     public void render() {
         glViewport(0, 0,
-                defaultFramebuffer.getWidth(), defaultFramebuffer.getHeight());
-        renderToFramebuffer(defaultFramebuffer);
+                renderBuffer.getWidth(), renderBuffer.getHeight());
+        renderToFramebuffer(renderBuffer);
 
-        LightRenderer.getInstance().renderToFramebuffer(defaultFramebuffer);
-
-        glViewport(Window.get().getVpX(), Window.get().getVpY(),
-                Window.get().getWidth(), Window.get().getHeight());
-        renderFromFramebufferToScreen(defaultFramebuffer);
+        LightRenderer.getInstance().renderToFramebuffer(renderBuffer);
 
         shader.detach();
     }
@@ -163,24 +157,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
 
         framebuffer.unbind();
-    }
-
-    private void renderFromFramebufferToScreen(Framebuffer framebuffer) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-        screenShader.use();
-        screenShader.uploadInt("screenTexture", 0);
-        glDisable(GL_DEPTH_TEST);
-        glActiveTexture(GL_TEXTURE0);
-        glBindVertexArray(AssetManager.getFullScreenQuadVAO());
-        glBindTexture(GL_TEXTURE_2D, framebuffer.getTextureID());
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        glBindVertexArray(0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        screenShader.detach();
     }
 
     private void loadVertexProperties(int index) {
@@ -250,8 +226,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         elements[offsetArrayIndex + 5] = offset + 1;
     }
 
+    public Framebuffer getFramebuffer() {
+        return renderBuffer;
+    }
+
     public void resize(int width, int height) {
-        defaultFramebuffer.resize(width, height);
+        renderBuffer.resize(width, height);
     }
 
     public boolean hasRoom() {
