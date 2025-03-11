@@ -118,7 +118,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private void renderToFramebuffer(Framebuffer framebuffer) {
         framebuffer.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
