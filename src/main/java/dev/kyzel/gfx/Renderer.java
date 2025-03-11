@@ -1,7 +1,7 @@
 package dev.kyzel.gfx;
 
 import dev.kyzel.engine.components.LightComponent;
-import dev.kyzel.engine.components.SpriteRenderer;
+import dev.kyzel.engine.components.SpriteComponent;
 import dev.kyzel.engine.GameObject;
 
 import java.util.ArrayList;
@@ -17,17 +17,17 @@ public class Renderer {
     }
 
     public void add(GameObject gameObject) {
-        SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
+        SpriteComponent spr = gameObject.getComponent(SpriteComponent.class);
         if (spr != null) {
             add(spr);
         }
         LightComponent light = gameObject.getComponent(LightComponent.class);
         if (light != null) {
-            LightRenderBatch.getInstance().addLight(light);
+            LightRenderer.getInstance().addLight(light);
         }
     }
 
-    private void add(SpriteRenderer sprite) {
+    private void add(SpriteComponent sprite) {
         boolean added = false;
         for (RenderBatch renderBatch : batches) {
             if (renderBatch.hasRoom() && renderBatch.getzIndex() == sprite.gameObject.getzIndex()) {

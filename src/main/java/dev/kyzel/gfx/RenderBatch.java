@@ -1,6 +1,6 @@
 package dev.kyzel.gfx;
 
-import dev.kyzel.engine.components.SpriteRenderer;
+import dev.kyzel.engine.components.SpriteComponent;
 import dev.kyzel.engine.SceneManager;
 import dev.kyzel.utils.AssetManager;
 import org.joml.Vector2f;
@@ -29,7 +29,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final int VERTEX_SIZE = POS_SIZE + COLOR_SIZE + TEX_COORS_SIZE + TEX_ID_SIZE;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-    private final SpriteRenderer[] sprites;
+    private final SpriteComponent[] sprites;
     private int numSprites;
     private boolean hasRoom;
     private final float[] vertices;
@@ -46,7 +46,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     public RenderBatch(int maxBatchSize, int zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
         screenShader = AssetManager.getShader("assets/shaders/screen.glsl");
-        sprites = new SpriteRenderer[maxBatchSize];
+        sprites = new SpriteComponent[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
@@ -86,7 +86,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnableVertexAttribArray(3);
     }
 
-    public void addSprite(SpriteRenderer sprite) {
+    public void addSprite(SpriteComponent sprite) {
         sprites[numSprites] = sprite;
 
         if (sprite.getTexture() != null && !textures.contains(sprite.getTexture())) {
@@ -117,7 +117,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
         boolean rebufferData = false;
         for (int i = 0; i < numSprites; i++) {
-            SpriteRenderer sprite = sprites[i];
+            SpriteComponent sprite = sprites[i];
             if (sprite.isDirty()) {
                 loadVertexProperties(i);
                 sprite.setClean();
@@ -156,7 +156,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
             texture.unbind();
         }
 
-        LightRenderBatch.getInstance().render();
+        LightRenderer.getInstance().render();
 
         framebuffer.unbind();
     }
@@ -179,7 +179,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     private void loadVertexProperties(int index) {
-        SpriteRenderer sprite = sprites[index];
+        SpriteComponent sprite = sprites[index];
 
         int offset = index * 4 * VERTEX_SIZE;
 

@@ -13,19 +13,19 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class LightRenderBatch {
-    private static LightRenderBatch instance;
+public class LightRenderer {
+    private static LightRenderer instance;
     private final List<LightComponent> lights;
     private final Shader lightShader;
 
-    private LightRenderBatch() {
+    private LightRenderer() {
         this.lights = new ArrayList<>();
         lightShader = AssetManager.getShader("assets/shaders/light.glsl");
     }
 
-    public static LightRenderBatch getInstance() {
+    public static LightRenderer getInstance() {
         if (instance == null) {
-            instance = new LightRenderBatch();
+            instance = new LightRenderer();
         }
         return instance;
     }

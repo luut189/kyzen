@@ -1,16 +1,17 @@
 package dev.kyzel.engine;
 
-import dev.kyzel.engine.components.SpriteRenderer;
+import dev.kyzel.engine.components.SpriteComponent;
 import dev.kyzel.engine.components.Spritesheet;
 import dev.kyzel.game.tile.LightTile;
 import dev.kyzel.utils.AssetManager;
+import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class LevelScene extends Scene {
 
     private Spritesheet sprites;
-    private GameObject obj1, obj2;
+    private GameObject obj1;
 
     public LevelScene() {
         loadResources();
@@ -24,14 +25,21 @@ public class LevelScene extends Scene {
         sprites = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
         obj1 = new GameObject("Object1", new Transform(new Vector2f(100, 100), new Vector2f(objectScale)), -1);
-        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1.addComponent(new SpriteComponent(sprites.getSprite(0)));
         this.addGameObject(obj1);
 
-        obj2 = new LightTile("Light",
-                            new Transform(new Vector2f(100, 100),
-                            new Vector2f(objectScale)), -1,
-                            new Vector3f(1, 0, 0), 2);
-        this.addGameObject(obj2);
+        for (int i = 0; i < 10; i++) {
+            GameObject o = new LightTile("light" + i,
+                                        new Transform(new Vector2f((i + 1) * 100, 100),
+                                                      new Vector2f(objectScale)),
+                                        -1,
+                                        new Vector3f((float) Math.random() * i,
+                                                     (float) Math.random() * i,
+                                                     (float) Math.random() * i),
+                                0.4f);
+            this.addGameObject(o);
+        }
+
     }
 
     private void loadResources() {

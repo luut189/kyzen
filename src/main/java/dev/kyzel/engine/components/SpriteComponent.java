@@ -6,7 +6,7 @@ import dev.kyzel.gfx.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-public class SpriteRenderer extends Component {
+public class SpriteComponent extends Component {
 
     private final Vector4f color;
     private Sprite sprite;
@@ -14,13 +14,13 @@ public class SpriteRenderer extends Component {
     private Transform lastTransform;
     private boolean isDirty;
 
-    public SpriteRenderer(Vector4f color) {
+    public SpriteComponent(Vector4f color) {
         this.color = color;
         sprite = new Sprite(null);
         this.isDirty = true;
     }
 
-    public SpriteRenderer(Sprite sprite) {
+    public SpriteComponent(Sprite sprite) {
         this.sprite = sprite;
         this.color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
         this.isDirty = true;
