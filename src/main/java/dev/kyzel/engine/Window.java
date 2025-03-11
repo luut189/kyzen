@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Window {
-    private int width, height;
+    private int width, height, vpX, vpY;
     private final String title;
     private long glfwWindow;
     private float targetAspectRatio = 16f / 9f;
@@ -56,6 +56,14 @@ public class Window {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getVpX() {
+        return vpX;
+    }
+
+    public int getVpY() {
+        return vpY;
     }
 
     public void run() {
@@ -111,9 +119,9 @@ public class Window {
         this.width = targetWidth[0];
         this.height = targetHeight[0];
 
-        this.targetAspectRatio = (float) targetWidth[0] / (float) targetHeight[0];
-        glViewport(0, 0, targetWidth[0], targetHeight[0]);
-        AssetManager.createFramebuffer("default", targetWidth[0], targetHeight[0]);
+        this.targetAspectRatio = (float) width / (float) height;
+        glViewport(0, 0, width, height);
+        AssetManager.createFramebuffer("default", width, height);
 
         SceneManager.changeScene(0);
     }
@@ -149,8 +157,6 @@ public class Window {
         if (screenWidth == 0 || screenHeight == 0) {
             return;
         }
-        this.width = screenWidth;
-        this.height = screenHeight;
 
         Debug.log("Screen size: " + screenWidth + "x" + screenHeight);
 
@@ -160,14 +166,15 @@ public class Window {
             aspectHeight = screenHeight;
             aspectWidth = (int) ((float) aspectHeight * targetAspectRatio);
         }
+        this.width = aspectWidth;
+        this.height = aspectHeight;
 
         // Center rectangle
-        int vpX = (int) (((float) screenWidth / 2f) - ((float) aspectWidth / 2f));
-        int vpY = (int) (((float) screenHeight / 2f) - ((float) aspectHeight / 2f));
+        vpX = (int) (((float) screenWidth / 2f) - ((float) aspectWidth / 2f));
+        vpY = (int) (((float) screenHeight / 2f) - ((float) aspectHeight / 2f));
 
-        glViewport(vpX, vpY, aspectWidth, aspectHeight);
-
-        AssetManager.resizeFramebuffer("default", aspectWidth, aspectHeight);
+        SceneManager.getCurrentScene().camera.adjustProjection();
+        SceneManager.getCurrentScene().renderer.resize(aspectWidth, aspectHeight);
         LightRenderer.getInstance().resize(aspectWidth, aspectHeight);
     }
 

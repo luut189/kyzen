@@ -1,5 +1,6 @@
 package dev.kyzel.gfx;
 
+import dev.kyzel.engine.Window;
 import dev.kyzel.engine.components.SpriteComponent;
 import dev.kyzel.engine.SceneManager;
 import dev.kyzel.utils.AssetManager;
@@ -101,10 +102,14 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
 
     public void render() {
+        glViewport(0, 0,
+                defaultFramebuffer.getWidth(), defaultFramebuffer.getHeight());
         renderToFramebuffer(defaultFramebuffer);
 
         LightRenderer.getInstance().renderToFramebuffer(defaultFramebuffer);
 
+        glViewport(Window.get().getVpX(), Window.get().getVpY(),
+                Window.get().getWidth(), Window.get().getHeight());
         renderFromFramebufferToScreen(defaultFramebuffer);
 
         shader.detach();
@@ -113,6 +118,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private void renderToFramebuffer(Framebuffer framebuffer) {
         framebuffer.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -161,7 +167,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     private void renderFromFramebufferToScreen(Framebuffer framebuffer) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
         screenShader.use();
         screenShader.uploadInt("screenTexture", 0);
@@ -241,6 +249,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
         elements[offsetArrayIndex + 3] = offset;
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
+    }
+
+    public void resize(int width, int height) {
+        defaultFramebuffer.resize(width, height);
     }
 
     public boolean hasRoom() {

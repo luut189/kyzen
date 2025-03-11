@@ -32,7 +32,7 @@ public class Renderer {
         for (RenderBatch renderBatch : batches) {
             if (renderBatch.hasRoom() && renderBatch.getzIndex() == sprite.gameObject.getzIndex()) {
                 Texture texture = sprite.getTexture();
-                if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTexture(texture))) {
+                if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTextureRoom())) {
                     renderBatch.addSprite(sprite);
                     added = true;
                     break;
@@ -52,6 +52,12 @@ public class Renderer {
     public void render() {
         for (RenderBatch renderBatch : batches) {
             renderBatch.render();
+        }
+    }
+
+    public void resize(int width, int height) {
+        for (RenderBatch renderBatch : batches) {
+            renderBatch.resize(width, height);
         }
     }
 }

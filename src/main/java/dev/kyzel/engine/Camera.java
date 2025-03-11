@@ -19,8 +19,8 @@ public class Camera {
 
     public void adjustProjection() {
         projectionMatrix.identity();
-        float width = (32.0f * 40.0f) / zoom;
-        float height = (32.0f * 21.0f) / zoom;
+        float width = Window.get().getWidth() / zoom;
+        float height = Window.get().getHeight() / zoom;
         projectionMatrix.ortho(0.0f, width, 0.0f, height, 0, 100);
     }
 

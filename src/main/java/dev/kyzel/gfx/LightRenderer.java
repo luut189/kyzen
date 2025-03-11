@@ -119,6 +119,7 @@ public class LightRenderer {
         }
 
         framebuffer.bind();
+        glViewport(0,0, framebuffer.getWidth(), framebuffer.getHeight());
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         postProcessShader.use();
@@ -132,7 +133,6 @@ public class LightRenderer {
         postProcessShader.uploadTexture("uBloom", 1);
 
         renderFullscreenQuad();
-
         framebuffer.unbind();
 
         blurShader.detach();
@@ -140,11 +140,8 @@ public class LightRenderer {
     }
 
     public void resize(int width, int height) {
-        AssetManager.resizeFramebuffer("lightBuffer", width, height);
-        AssetManager.resizeFramebuffer("blurBuffer1", width, height);
-        AssetManager.resizeFramebuffer("blurBuffer2", width, height);
-        lightFramebuffer = AssetManager.getFramebuffer("lightBuffer");
-        blurFramebuffers[0] = AssetManager.getFramebuffer("blurBuffer1");
-        blurFramebuffers[1] = AssetManager.getFramebuffer("blurBuffer2");
+        lightFramebuffer.resize(width, height);
+        blurFramebuffers[0].resize(width, height);
+        blurFramebuffers[1].resize(width, height);
     }
 }

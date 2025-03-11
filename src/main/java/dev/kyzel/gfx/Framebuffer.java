@@ -4,10 +4,13 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Framebuffer {
     private final int fboID;
+    private int width, height;
     private int rboID;
     private Texture texture;
 
     public Framebuffer(int width, int height) {
+        this.width = width;
+        this.height = height;
         fboID = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, fboID);
 
@@ -24,7 +27,17 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void resize(int width, int height) {
+        this.width = width;
+        this.height = height;
         glBindFramebuffer(GL_FRAMEBUFFER, fboID);
 
         this.texture = new Texture(width, height);
