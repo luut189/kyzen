@@ -2,6 +2,7 @@ package dev.kyzel.engine;
 
 import dev.kyzel.gfx.Renderer;
 import dev.kyzel.input.KeyListener;
+import dev.kyzel.input.MouseListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public abstract class Scene {
     }
 
     public void handleCameraMovement(float delta) {
-        float speed = 200f;
+        float speed = 200f * 1 / camera.getZoom();
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
             camera.position.y += delta * speed;
         }
@@ -57,6 +58,11 @@ public abstract class Scene {
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
             camera.position.x += delta * speed;
+        }
+        if (MouseListener.getScrollY() > 0) {
+            camera.zoomIn();
+        } else if (MouseListener.getScrollY() < 0) {
+            camera.zoomOut();
         }
     }
 

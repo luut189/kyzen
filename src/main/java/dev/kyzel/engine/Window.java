@@ -1,5 +1,6 @@
 package dev.kyzel.engine;
 
+import dev.kyzel.gfx.LightRenderer;
 import dev.kyzel.input.KeyListener;
 import dev.kyzel.input.MouseListener;
 import dev.kyzel.utils.AssetManager;
@@ -133,6 +134,7 @@ public class Window {
                 }
                 Debug.log("FPS: " + Math.floor(1f / deltaTime));
                 SceneManager.updateScene(deltaTime);
+                MouseListener.endFrame();
             }
 
             glfwSwapBuffers(glfwWindow);
