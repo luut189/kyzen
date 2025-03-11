@@ -113,9 +113,9 @@ public class LightRenderer {
             glBindTexture(GL_TEXTURE_2D, firsIteration ? lightFramebuffer.getTextureID() :
                     blurFramebuffers[horizontal ? 0 : 1].getTextureID());
             renderFullscreenQuad();
+            blurFramebuffers[horizontal ? 0 : 1].unbind();
             horizontal = !horizontal;
             if (firsIteration) firsIteration = false;
-            blurFramebuffers[horizontal ? 0 : 1].unbind();
         }
 
         framebuffer.bind();
@@ -129,7 +129,7 @@ public class LightRenderer {
         postProcessShader.uploadTexture("uScene", 0);
 
         glActiveTexture(GL_TEXTURE0 + 1);
-        glBindTexture(GL_TEXTURE_2D, blurFramebuffers[0].getTextureID());
+        glBindTexture(GL_TEXTURE_2D, blurFramebuffers[horizontal ? 1 : 0].getTextureID());
         postProcessShader.uploadTexture("uBloom", 1);
 
         renderFullscreenQuad();
