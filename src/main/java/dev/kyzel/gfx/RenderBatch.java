@@ -18,17 +18,17 @@ public class RenderBatch implements Comparable<RenderBatch> {
     // Pos              Color                           Tex Coords          Tex ID
     // float, float     float, float, float, float      float, float        float
 
-    private final int POS_SIZE = 2;
-    private final int COLOR_SIZE = 4;
-    private final int TEX_COORS_SIZE = 2;
-    private final int TEX_ID_SIZE = 1;
+    private static final int POS_SIZE = 2;
+    private static final int COLOR_SIZE = 4;
+    private static final int TEX_COORS_SIZE = 2;
+    private static final int TEX_ID_SIZE = 1;
 
-    private final int POS_OFFSET = 0;
-    private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
-    private final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-    private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORS_SIZE * Float.BYTES;
-    private final int VERTEX_SIZE = POS_SIZE + COLOR_SIZE + TEX_COORS_SIZE + TEX_ID_SIZE;
-    private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private static final int POS_OFFSET = 0;
+    private static final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
+    private static final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
+    private static final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORS_SIZE * Float.BYTES;
+    private static final int VERTEX_SIZE = POS_SIZE + COLOR_SIZE + TEX_COORS_SIZE + TEX_ID_SIZE;
+    private static final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
     private final SpriteComponent[] sprites;
     private int numSprites;
@@ -187,8 +187,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
 
-            vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
-            vertices[offset + 1] = sprite.gameObject.transform.position.y + (yAdd * sprite.gameObject.transform.scale.y);
+            vertices[offset] = sprite.gameObject.getTransform().position.x + (xAdd * sprite.gameObject.getTransform().scale.x);
+            vertices[offset + 1] = sprite.gameObject.getTransform().position.y + (yAdd * sprite.gameObject.getTransform().scale.y);
 
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;

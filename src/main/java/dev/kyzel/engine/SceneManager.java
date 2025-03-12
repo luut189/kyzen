@@ -9,6 +9,7 @@ public class SceneManager {
     }
 
     public static void changeScene(int newScene) {
+        assert newScene >= 0 && newScene < scenes.length : "Invalid scene number";
         currentScene = scenes[newScene];
         currentScene.init();
         currentScene.start();

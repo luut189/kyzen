@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class Renderer {
-    private final int MAX_BATCH_SIZE = 100;
+    public static final int MAX_BATCH_SIZE = 100;
     private final List<RenderBatch> batches;
     private final Shader screenShader;
 

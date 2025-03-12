@@ -61,7 +61,7 @@ public class LightRenderer {
             GameObject entity = light.gameObject;
             if (entity == null) continue;
 
-            Transform transform = entity.transform;
+            Transform transform = entity.getTransform();
             if (transform == null) continue;
 
             float objectWidth = transform.scale.x;
@@ -81,9 +81,9 @@ public class LightRenderer {
             );
 
             lightShader.uploadVec2f("lightPos", lightCenterPos);
-            lightShader.uploadVec3f("lightColor", light.color);
-            lightShader.uploadFloat("lightRadius", light.radius);
-            lightShader.uploadFloat("ambientStrength", light.intensity);
+            lightShader.uploadVec3f("lightColor", light.getColor());
+            lightShader.uploadFloat("lightRadius", light.getRadius());
+            lightShader.uploadFloat("ambientStrength", light.getIntensity());
 
             renderFullscreenQuad();
         }

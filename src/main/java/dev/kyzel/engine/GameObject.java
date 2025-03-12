@@ -9,7 +9,7 @@ public class GameObject {
 
     private final int id;
     private final List<Component> componentList;
-    public final Transform transform;
+    private final Transform transform;
 
     private final int zIndex;
 
@@ -57,6 +57,10 @@ public class GameObject {
         for (Component component : componentList) {
             component.update(deltaTime);
         }
+    }
+
+    public Transform getTransform() {
+        return transform;
     }
 
     public int getID() {

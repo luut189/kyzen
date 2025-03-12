@@ -28,13 +28,13 @@ public class SpriteComponent extends Component {
 
     @Override
     public void start() {
-        lastTransform = gameObject.transform.copy();
+        lastTransform = gameObject.getTransform().copy();
     }
 
     @Override
     public void update(float deltaTime) {
-        if (!lastTransform.equals(gameObject.transform)) {
-            gameObject.transform.copy(lastTransform);
+        if (!lastTransform.equals(gameObject.getTransform())) {
+            gameObject.getTransform().copy(lastTransform);
             isDirty = true;
         }
     }

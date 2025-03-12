@@ -3,6 +3,7 @@ package dev.kyzel.engine;
 import dev.kyzel.gfx.Renderer;
 import dev.kyzel.input.KeyListener;
 import dev.kyzel.input.MouseListener;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,6 @@ public abstract class Scene {
     protected final List<GameObject> gameObjectList = new ArrayList<>();
     protected final Renderer renderer = new Renderer();
     private boolean isRunning = false;
-
-    public Scene() {
-    }
 
     public void init() {
 
@@ -47,17 +45,18 @@ public abstract class Scene {
 
     public void handleCameraMovement(float delta) {
         float speed = 200f * 1 / camera.getZoom();
+        Vector2f cameraPosition = camera.getPosition();
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            camera.position.y += delta * speed;
+            cameraPosition.y += delta * speed;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
-            camera.position.y -= delta * speed;
+            cameraPosition.y -= delta * speed;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
-            camera.position.x -= delta * speed;
+            cameraPosition.x -= delta * speed;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
-            camera.position.x += delta * speed;
+            cameraPosition.x += delta * speed;
         }
         if (MouseListener.getScrollY() > 0) {
             camera.zoomIn();
