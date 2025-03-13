@@ -1,6 +1,5 @@
-package dev.kyzel.engine.components;
+package dev.kyzel.gfx;
 
-import dev.kyzel.gfx.Texture;
 import org.joml.Vector2f;
 
 public class Sprite {

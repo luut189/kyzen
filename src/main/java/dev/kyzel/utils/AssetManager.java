@@ -1,6 +1,6 @@
 package dev.kyzel.utils;
 
-import dev.kyzel.engine.components.Spritesheet;
+import dev.kyzel.gfx.Spritesheet;
 import dev.kyzel.gfx.Framebuffer;
 import dev.kyzel.gfx.Shader;
 import dev.kyzel.gfx.Texture;

@@ -2,6 +2,7 @@ package dev.kyzel.engine.components;
 
 import dev.kyzel.engine.Component;
 import dev.kyzel.engine.Transform;
+import dev.kyzel.gfx.Sprite;
 import dev.kyzel.gfx.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

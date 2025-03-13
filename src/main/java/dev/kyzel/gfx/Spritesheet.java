@@ -1,6 +1,5 @@
-package dev.kyzel.engine.components;
+package dev.kyzel.gfx;
 
-import dev.kyzel.gfx.Texture;
 import dev.kyzel.utils.Debug;
 import org.joml.Vector2f;
 
@@ -16,9 +15,9 @@ public class Spritesheet {
         for (int currentY = 0; currentY < texture.getHeight(); currentY += spriteHeight + spacing) {
             for (int currentX = 0; currentX < texture.getWidth(); currentX += spriteWidth + spacing) {
                 if (isSpriteEmpty(texture.getPixels(),
-                                  currentX, currentY,
-                                  spriteWidth, spriteHeight,
-                                  texture.getWidth(), texture.getChannels())) continue;
+                        currentX, currentY,
+                        spriteWidth, spriteHeight,
+                        texture.getWidth(), texture.getChannels())) continue;
 
                 float leftX = currentX / (float) texture.getWidth();
                 float rightX = (currentX + spriteWidth) / (float) texture.getWidth();
@@ -26,10 +25,10 @@ public class Spritesheet {
                 float bottomY = (currentY + spriteHeight) / (float) texture.getHeight();
 
                 Vector2f[] texCoords = {
-                    new Vector2f(rightX, topY),
-                    new Vector2f(rightX, bottomY),
-                    new Vector2f(leftX, bottomY),
-                    new Vector2f(leftX, topY)
+                        new Vector2f(rightX, topY),
+                        new Vector2f(rightX, bottomY),
+                        new Vector2f(leftX, bottomY),
+                        new Vector2f(leftX, topY)
                 };
 
                 Sprite sprite = new Sprite(texture, texCoords);
