@@ -17,6 +17,9 @@ public abstract class Scene {
     protected Camera camera;
     protected final List<GameObject> gameObjectList = new ArrayList<>();
     protected final Renderer renderer = new Renderer();
+
+    private int currentMaxZIndex = 0;
+
     private boolean isRunning = false;
 
     public void init() {
@@ -52,6 +55,7 @@ public abstract class Scene {
             gameObject.start();
             this.renderer.add(gameObject);
         }
+        currentMaxZIndex = Math.max(gameObject.getzIndex(), currentMaxZIndex);
     }
 
     public void removeGameObject(GameObject gameObject) {
@@ -80,6 +84,14 @@ public abstract class Scene {
         } else if (MouseListener.getScrollY() < 0) {
             camera.zoomOut();
         }
+    }
+
+    public int getCurrentMaxZIndex() {
+        return currentMaxZIndex;
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
     }
 
     public Camera getCamera() {
