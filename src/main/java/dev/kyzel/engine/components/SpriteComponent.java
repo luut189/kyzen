@@ -26,6 +26,12 @@ public class SpriteComponent extends Component {
         this.isDirty = true;
     }
 
+    public SpriteComponent(Sprite sprite, Vector4f color) {
+        this.sprite = sprite;
+        this.color = color;
+        this.isDirty = true;
+    }
+
     @Override
     public void start() {
         lastTransform = gameObject.getTransform().copy();

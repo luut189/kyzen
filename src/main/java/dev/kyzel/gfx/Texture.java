@@ -9,8 +9,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    private int width;
-    private int height;
+    private int width, height, channels;
+    private int[] pixels;
     private final int textureID;
 
     public Texture(String path) {
@@ -37,6 +37,13 @@ public class Texture {
 
         this.width = width.get(0);
         this.height = height.get(0);
+        this.channels = channels.get(0);
+
+        pixels = new int[this.width * this.height * this.channels];
+
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i] = image.get(i) & 0xFF;
+        }
 
         if (channels.get(0) == 3) {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -66,6 +73,10 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    public int[] getPixels() {
+        return pixels;
+    }
+
     public int getTextureID() {
         return textureID;
     }
@@ -76,5 +87,9 @@ public class Texture {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getChannels() {
+        return channels;
     }
 }
