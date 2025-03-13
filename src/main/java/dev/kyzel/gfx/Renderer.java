@@ -19,10 +19,14 @@ public class Renderer {
     public static final int MAX_BATCH_SIZE = 100;
     private final List<RenderBatch> batches;
     private final Shader screenShader;
+    private final Framebuffer lightBuffer, compositeBuffer;
 
     public Renderer() {
         batches = new ArrayList<>();
         screenShader = AssetManager.getShader("assets/shaders/screen.glsl");
+
+        lightBuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
+        compositeBuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
     }
 
     public void add(GameObject gameObject) {
@@ -76,27 +80,40 @@ public class Renderer {
     }
 
     public void render() {
+        // clear screen
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // render everything except lights
         for (RenderBatch renderBatch : batches) {
             renderBatch.render();
-
-            glViewport(Window.get().getVpX(), Window.get().getVpY(),
-                    Window.get().getWidth(), Window.get().getHeight());
-            renderToScreen(renderBatch.getFramebuffer());
         }
-    }
 
-    public void resize(int width, int height) {
+        // render and composite lights
+        compositeBuffer.bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (RenderBatch renderBatch : batches) {
-            renderBatch.resize(width, height);
+            blendFramebuffer(renderBatch.getFramebuffer(), compositeBuffer);
         }
+        LightRenderer.getInstance().renderToFramebuffer(compositeBuffer);
+        compositeBuffer.unbind();
+
+        // final render to screen
+        glViewport(Window.get().getVpX(), Window.get().getVpY(),
+                    Window.get().getWidth(), Window.get().getHeight());
+        renderToScreen(compositeBuffer);
     }
 
-    public void renderToScreen(Framebuffer framebuffer) {
+    private void blendFramebuffer(Framebuffer from, Framebuffer to) {
+        to.bind();
+        renderToScreen(from);
+        to.unbind();
+    }
+
+    private void renderToScreen(Framebuffer framebuffer) {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         screenShader.use();
-        screenShader.uploadInt("screenTexture", 0);
+        screenShader.uploadTexture("screenTexture", 0);
         glDisable(GL_DEPTH_TEST);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(AssetManager.getFullScreenQuadVAO());
@@ -106,5 +123,13 @@ public class Renderer {
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
         screenShader.detach();
+    }
+
+    public void resize(int width, int height) {
+        for (RenderBatch renderBatch : batches) {
+            renderBatch.resize(width, height);
+        }
+        lightBuffer.resize(width, height);
+        compositeBuffer.resize(width, height);
     }
 }

@@ -118,7 +118,7 @@ public class Window {
 
         this.targetAspectRatio = (float) width / (float) height;
         glViewport(0, 0, width, height);
-        AssetManager.createFramebuffer("default", width, height);
+        AssetManager.init();
 
         SceneManager.changeScene(0);
     }

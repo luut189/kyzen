@@ -7,9 +7,10 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Texture {
-    private int width, height, channels;
+    private final int width, height, channels;
     private int[] pixels;
     private final int textureID;
 
@@ -46,23 +47,28 @@ public class Texture {
         }
 
         if (channels.get(0) == 3) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         } else if (channels.get(0) == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         } else {
             assert false : "Error: (Textures) Unknown number of channels: " + channels.get(0);
         }
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         stbi_image_free(image);
     }
 
     public Texture(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.channels = 4;
         textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void bind() {

@@ -17,14 +17,13 @@ out vec4 FragColor;
 
 uniform sampler2D uScene;
 uniform sampler2D uBloom;
+uniform float bloomIntensity = 0.8;
 
 void main() {
-    // Make sure we're sampling using the correct texture coordinates
-    vec3 sceneColor = texture(uScene, TexCoords).rgb;
+    vec4 sceneColor = texture(uScene, TexCoords);
     vec3 bloomColor = texture(uBloom, TexCoords).rgb;
 
-    // Add bloom to the scene color
-    vec3 finalColor = sceneColor + bloomColor;
+    vec3 finalColor = sceneColor.rgb + (bloomColor * bloomIntensity);
 
-    FragColor = vec4(finalColor, 1.0);
+    FragColor = vec4(finalColor, sceneColor.a);
 }

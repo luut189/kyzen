@@ -122,8 +122,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 renderBuffer.getWidth(), renderBuffer.getHeight());
         renderToFramebuffer(renderBuffer);
 
-        LightRenderer.getInstance().renderToFramebuffer(renderBuffer);
-
         shader.detach();
     }
 
@@ -205,8 +203,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
 
-            vertices[offset] = sprite.gameObject.getTransform().position.x + (xAdd * sprite.gameObject.getTransform().scale.x);
-            vertices[offset + 1] = sprite.gameObject.getTransform().position.y + (yAdd * sprite.gameObject.getTransform().scale.y);
+            vertices[offset] =
+                    sprite.gameObject.getTransform().position.x + (xAdd * sprite.gameObject.getTransform().scale.x);
+            vertices[offset + 1] =
+                    sprite.gameObject.getTransform().position.y + (yAdd * sprite.gameObject.getTransform().scale.y);
 
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;
