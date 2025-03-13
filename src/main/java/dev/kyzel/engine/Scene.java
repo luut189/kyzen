@@ -1,11 +1,13 @@
 package dev.kyzel.engine;
 
+import dev.kyzel.engine.components.LifetimeComponent;
 import dev.kyzel.gfx.Renderer;
 import dev.kyzel.input.KeyListener;
 import dev.kyzel.input.MouseListener;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -31,6 +33,15 @@ public abstract class Scene {
 
     public void update(float delta) {
         handleCameraMovement(delta);
+        Iterator<GameObject> iterator = gameObjectList.iterator();
+        while (iterator.hasNext()) {
+            GameObject gameObject = iterator.next();
+            LifetimeComponent lifetimeComponent = gameObject.getComponent(LifetimeComponent.class);
+            if (lifetimeComponent != null && lifetimeComponent.isExpired()) {
+                iterator.remove();
+                removeGameObject(gameObject);
+            }
+        }
     }
 
     public void addGameObject(GameObject gameObject) {
@@ -41,6 +52,12 @@ public abstract class Scene {
             gameObject.start();
             this.renderer.add(gameObject);
         }
+    }
+
+    public void removeGameObject(GameObject gameObject) {
+        renderer.remove(gameObject);
+
+        gameObject.removeAllComponents();
     }
 
     public void handleCameraMovement(float delta) {

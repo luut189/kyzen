@@ -98,6 +98,24 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
     }
 
+    public boolean removeSprite(SpriteComponent sprite) {
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i] == sprite) {
+                if (i < numSprites - 1) {
+                    sprites[i] = sprites[numSprites - 1];
+                    loadVertexProperties(i);
+                }
+                sprites[numSprites - 1] = null;
+                numSprites--;
+
+                hasRoom = true;
+
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void render() {
         glViewport(0, 0,

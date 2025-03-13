@@ -58,6 +58,23 @@ public class Renderer {
         }
     }
 
+    public void remove(GameObject gameObject) {
+        SpriteComponent spr = gameObject.getComponent(SpriteComponent.class);
+        if (spr != null) {
+            remove(spr);
+        }
+        LightComponent light = gameObject.getComponent(LightComponent.class);
+        if (light != null) {
+            LightRenderer.getInstance().removeLight(light);
+        }
+    }
+
+    private void remove(SpriteComponent sprite) {
+        for (RenderBatch renderBatch : batches) {
+            if (renderBatch.removeSprite(sprite)) break;
+        }
+    }
+
     public void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (RenderBatch renderBatch : batches) {
