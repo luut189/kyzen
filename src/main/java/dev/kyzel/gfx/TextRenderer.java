@@ -11,63 +11,136 @@ import org.joml.Vector4f;
 
 public class TextRenderer {
 
+    public enum Flag {
+        NONE,
+        DOUBLED
+    }
+
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,.%?!:";
-    public static final Spritesheet sheet = AssetManager.getSpritesheet("assets/textures/testing.png");
+    public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[],.?:;\"";
+    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/font.png");
 
-    public static void renderText(String text, Transform baseTransform, Vector4f color) {
-        renderText(text, baseTransform, color, null, -1);
+    // Method with just mandatory parameters
+    public static void renderText(String text, Transform transform, Vector4f color) {
+        renderText(text, transform, color, null, -1, Flag.NONE);
     }
 
-    public static void renderText(String text, Transform baseTransform, Vector4f color, float lifetime) {
-        renderText(text, baseTransform, color, null, lifetime);
+    // Method with lifetime
+    public static void renderText(String text, Transform transform, Vector4f color, float lifetime) {
+        renderText(text, transform, color, null, lifetime, Flag.NONE);
     }
 
-    public static void renderText(String text, Transform baseTransform, Vector4f color, Vector4f background) {
-        renderText(text, baseTransform, color, background, -1);
+    // Method with background
+    public static void renderText(String text, Transform transform, Vector4f color, Vector4f backgroundColor) {
+        renderText(text, transform, color, backgroundColor, -1, Flag.NONE);
+    }
+
+    // Method with flags
+    public static void renderText(String text, Transform transform, Vector4f color, Flag flag) {
+        renderText(text, transform, color, null, -1, flag);
+    }
+
+    // Method with background and lifetime
+    public static void renderText(String text, Transform transform, Vector4f color,
+                                  Vector4f backgroundColor, float lifetime) {
+        renderText(text, transform, color, backgroundColor, lifetime, Flag.NONE);
+    }
+
+    // Method with color and flags and lifetime
+    public static void renderText(String text, Transform transform, Vector4f color,
+                                  float lifetime, Flag flag) {
+        renderText(text, transform, color, null, lifetime, flag);
+    }
+
+    // Method with background and flags
+    public static void renderText(String text, Transform transform, Vector4f color,
+                                  Vector4f backgroundColor, Flag flag) {
+        renderText(text, transform, color, backgroundColor, -1, flag);
     }
 
     public static void renderText(String text,
                                   Transform baseTransform,
                                   Vector4f color, Vector4f backgroundColor,
-                                  float lifetime) {
+                                  float lifetime,
+                                  Flag flag) {
         Vector2f position = new Vector2f(baseTransform.position);
 
         // in order to make this work, render text have to be called after every other game object
         int zIndex = SceneManager.getCurrentScene().getCurrentMaxZIndex() + 1;
 
-        float charSpacing = baseTransform.scale.x * 0.1f;
+        int maxChar = 0, charCount = 0, line = 1;
         for (char c : text.toUpperCase().toCharArray()) {
+            charCount++;
             if (c == ' ') {
                 position.x += baseTransform.scale.x;
+                continue;
+            }
+            if (c == '\n') {
+                maxChar = Math.max(maxChar, charCount);
+                charCount = 0;
+                line++;
+                position.x = baseTransform.position.x;
+                position.y -= baseTransform.scale.y;
                 continue;
             }
 
             int index = LAYOUT.indexOf(c);
             if (index == -1) index = LAYOUT.indexOf('?');
 
-            GameObject charObject = new GameObject(new Transform(new Vector2f(position), baseTransform.scale), zIndex);
-
-            charObject.addComponent(new SpriteComponent(sheet.getSprite(index), color));
-
-            if (lifetime > 0) {
-                charObject.addComponent(new LifetimeComponent(lifetime));
+            if (flag == Flag.DOUBLED) {
+                Vector2f offset = new Vector2f(
+                        position.x + baseTransform.scale.x * 0.1f,
+                        position.y - baseTransform.scale.y * 0.1f
+                );
+                Vector4f shadowColor = new Vector4f(
+                        color.x * 0.5f,
+                        color.y * 0.5f,
+                        color.z * 0.5f,
+                        color.w
+                );
+                createGameObject(
+                        new Transform(new Vector2f(offset), baseTransform.scale),
+                        new SpriteComponent(FONT_SHEET.getSprite(index), shadowColor),
+                        lifetime,
+                        zIndex - 1
+                );
             }
 
-            SceneManager.getCurrentScene().addGameObject(charObject);
+            createGameObject(
+                    new Transform(new Vector2f(position), baseTransform.scale),
+                    new SpriteComponent(FONT_SHEET.getSprite(index), color),
+                    lifetime,
+                    zIndex
+            );
 
-            position.x += baseTransform.scale.x + charSpacing;
+            position.x += baseTransform.scale.x;
         }
         if (backgroundColor != null) {
-            float newScaleX = text.length() * (baseTransform.scale.x + charSpacing);
-            Vector2f bgScale = new Vector2f(newScaleX, baseTransform.scale.y);
-            GameObject backgroundObject = new GameObject(new Transform(baseTransform.position, bgScale), zIndex - 1);
-            backgroundObject.addComponent(new SpriteComponent(backgroundColor));
-            if (lifetime > 0) {
-                backgroundObject.addComponent(new LifetimeComponent(lifetime));
+            float newScaleX = maxChar * baseTransform.scale.x;
+            Vector2f bgScale = new Vector2f(newScaleX, line * baseTransform.scale.y);
+
+            float newPositionY = baseTransform.position.y - (line - 1) * baseTransform.scale.y;
+            if (flag == Flag.DOUBLED) {
+                bgScale.y += baseTransform.scale.y * 0.1f;
+                newPositionY -= baseTransform.scale.y * 0.1f;
             }
-            SceneManager.getCurrentScene().addGameObject(backgroundObject);
+
+            createGameObject(
+                    new Transform(new Vector2f(baseTransform.position.x, newPositionY), bgScale),
+                    new SpriteComponent(backgroundColor),
+                    lifetime,
+                    zIndex - (flag == Flag.DOUBLED ? 2 : 1)
+            );
         }
+    }
+
+    private static void createGameObject(Transform transform,
+                                         SpriteComponent spriteComponent,
+                                         float lifetime, int zIndex) {
+        GameObject gameObject = new GameObject(transform, zIndex);
+        if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
+        gameObject.addComponent(spriteComponent);
+        SceneManager.getCurrentScene().addGameObject(gameObject);
     }
 
 }

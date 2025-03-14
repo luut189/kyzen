@@ -29,12 +29,8 @@ public class AssetManager {
         AssetManager.getShader("assets/shaders/blur.glsl");
         AssetManager.getShader("assets/shaders/post-process.glsl");
         AssetManager.getShader("assets/shaders/light.glsl");
-        AssetManager.addSpritesheet("assets/textures/spritesheet.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/spritesheet.png"), 16, 16, 0));
-        AssetManager.addSpritesheet("assets/textures/tiles.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/tiles.png"), 8, 8, 0));
-        AssetManager.addSpritesheet("assets/textures/testing.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/testing.png"), 16, 16, 0));
+        AssetManager.addSpritesheet("assets/textures/font.png",
+                new Spritesheet(AssetManager.getTexture("assets/textures/font.png"), 16, 16, 0));
     }
 
     public static int getNextID() {
