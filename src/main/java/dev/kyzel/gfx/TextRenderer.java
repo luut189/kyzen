@@ -63,6 +63,9 @@ public class TextRenderer {
             Vector2f bgScale = new Vector2f(newScaleX, baseTransform.scale.y);
             GameObject backgroundObject = new GameObject(new Transform(baseTransform.position, bgScale), zIndex - 1);
             backgroundObject.addComponent(new SpriteComponent(backgroundColor));
+            if (lifetime > 0) {
+                backgroundObject.addComponent(new LifetimeComponent(lifetime));
+            }
             SceneManager.getCurrentScene().addGameObject(backgroundObject);
         }
     }
