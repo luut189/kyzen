@@ -12,5 +12,4 @@ public abstract class Tile extends GameObject {
     public Tile(Transform transform, float zIndex) {
         super(transform, zIndex);
     }
-
 }

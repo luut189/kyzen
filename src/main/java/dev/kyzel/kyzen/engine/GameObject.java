@@ -28,17 +28,19 @@ public class GameObject {
         return componentClass.cast(component);
     }
 
-    public void addComponent(Component component) {
-        if (componentMap.containsKey(component.getClass())) return;
+    public GameObject addComponent(Component component) {
+        if (componentMap.containsKey(component.getClass())) return this;
         componentMap.put(component.getClass(), component);
         component.gameObject = this;
+        return this;
     }
 
-    public <T extends Component> void removeComponent(Class<T> componentClass) {
+    public <T extends Component> GameObject removeComponent(Class<T> componentClass) {
         Component component = componentMap.remove(componentClass);
         if (component != null) {
             component.gameObject = null;
         }
+        return this;
     }
 
     public void removeAllComponents() {

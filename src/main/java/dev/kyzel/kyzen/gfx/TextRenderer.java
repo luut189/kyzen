@@ -137,9 +137,8 @@ public class TextRenderer {
     private static void createGameObject(Transform transform,
                                          SpriteComponent spriteComponent,
                                          float lifetime, float zIndex) {
-        GameObject gameObject = new GameObject(transform, zIndex);
+        GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
         if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
-        gameObject.addComponent(spriteComponent);
         SceneManager.getCurrentScene().addGameObject(gameObject);
     }
 

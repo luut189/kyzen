@@ -10,7 +10,7 @@ public class LightTile extends Tile {
 
     public LightTile(Transform transform, float zIndex, Vector3f color, float intensity) {
         super(transform, zIndex);
-        this.addComponent(new SpriteComponent(new Vector4f(color, 0.9f)));
-        this.addComponent(new LightComponent(transform.scale.x, color, intensity));
+        this.addComponent(new SpriteComponent(new Vector4f(color, 0.9f)))
+            .addComponent(new LightComponent(transform.scale.x, color, intensity));
     }
 }
