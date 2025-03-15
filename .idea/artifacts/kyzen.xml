@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact name="kyzen">
+    <output-path>$PROJECT_DIR$/out/artifacts/kyzen</output-path>
+    <root id="root">
+      <element id="archive" name="testing-lwjgl.jar">
+        <element id="module-output" name="kyzen" />
+      </element>
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-opengl:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-openal:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.joml:joml:1.10.7" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-glfw:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-assimp:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-openal:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-assimp:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-stb:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-stb:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-opengl:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl-glfw:natives-windows:3.3.6" />
+      <element id="library" level="project" name="Maven: org.lwjgl:lwjgl:3.3.6" />
+      <element id="directory" name="assets">
+        <element id="dir-copy" path="$PROJECT_DIR$/assets" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: dev.kyzel.Main
+Main-Class: dev.kyzel.kyzen.Main
 Class-Path: lwjgl-opengl-3.3.6.jar lwjgl-openal-3.3.6-natives-windows.ja
  r joml-1.10.7.jar lwjgl-glfw-3.3.6.jar lwjgl-assimp-3.3.6-natives-windo
  ws.jar lwjgl-openal-3.3.6.jar lwjgl-assimp-3.3.6.jar lwjgl-3.3.6-native
