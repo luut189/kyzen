@@ -67,8 +67,8 @@ public class ColorPalette {
         return outputColor;
     }
 
-    private Vector3f getRGB(int i) {
-        int color = PALETTE[i];
+    private Vector3f getRGB(int index) {
+        int color = PALETTE[index];
         float r = ((color & 0xff0000) >> 16) / 255.0f;
         float g = ((color & 0xff00) >> 8) / 255.0f;
         float b = (color & 0xff) / 255.0f;
