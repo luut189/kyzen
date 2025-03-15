@@ -27,10 +27,8 @@ public class AssetManager {
         AssetManager.getShader("assets/shaders/blur.glsl");
         AssetManager.getShader("assets/shaders/post-process.glsl");
         AssetManager.getShader("assets/shaders/light.glsl");
-        AssetManager.addSpritesheet("assets/textures/99c-font.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/99c-font.png"), 16, 16, 0));
-        AssetManager.addSpritesheet("assets/textures/spritesheet.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/spritesheet.png"), 16, 16, 0));
+        AssetManager.addSpritesheet("assets/textures/99c-font.png", 16, 16, 0);
+        AssetManager.addSpritesheet("assets/textures/spritesheet.png", 16, 16, 0);
     }
 
     public static int getNextID() {
@@ -60,10 +58,11 @@ public class AssetManager {
         return texture;
     }
 
-    public static void addSpritesheet(String name, Spritesheet spritesheet) {
+    public static void addSpritesheet(String name, int spriteWidth, int spriteHeight, int spacing) {
         File file = new File(name);
         if (!spritesheets.containsKey(file.getAbsolutePath())) {
-            spritesheets.put(file.getAbsolutePath(), spritesheet);
+            spritesheets.put(file.getAbsolutePath(),
+                             new Spritesheet(AssetManager.getTexture(name), spriteWidth, spriteHeight, spacing));
         }
     }
 
