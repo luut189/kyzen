@@ -15,6 +15,11 @@ public class LightComponent extends Component {
     }
 
     @Override
+    public void start() {
+
+    }
+
+    @Override
     public void update(float deltaTime) {
 
     }

@@ -15,6 +15,11 @@ public class LifetimeComponent extends Component {
     }
 
     @Override
+    public void start() {
+
+    }
+
+    @Override
     public void update(float deltaTime) {
         timeElapsed += deltaTime;
         isExpired = timeElapsed >= lifetime;
