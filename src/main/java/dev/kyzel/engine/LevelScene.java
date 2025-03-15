@@ -1,6 +1,6 @@
 package dev.kyzel.engine;
 
-import dev.kyzel.game.tile.LavaTile;
+import dev.kyzel.game.tiles.LavaTile;
 import dev.kyzel.gfx.ColorPalette;
 import dev.kyzel.gfx.TextRenderer;
 import org.joml.Vector2f;

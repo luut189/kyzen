@@ -1,4 +1,4 @@
-package dev.kyzel.game.tile;
+package dev.kyzel.game.tiles;
 
 import dev.kyzel.engine.Transform;
 import dev.kyzel.engine.components.LightComponent;
