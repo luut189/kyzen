@@ -1,9 +1,6 @@
 package dev.kyzel.utils;
 
-import dev.kyzel.gfx.Spritesheet;
-import dev.kyzel.gfx.Framebuffer;
-import dev.kyzel.gfx.Shader;
-import dev.kyzel.gfx.Texture;
+import dev.kyzel.gfx.*;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,6 +18,7 @@ public class AssetManager {
     private static final Map<String, Texture> textures = new HashMap<>();
     private static final Map<String, Spritesheet> spritesheets = new HashMap<>();
     private static final Map<String, Framebuffer> framebuffers = new HashMap<>();
+    private static final Map<String, ColorPalette> colorPalettes = new HashMap<>();
     private static int fullScreenQuadVAO, fullScreenQuadVBO;
 
     public static void init() {
@@ -29,8 +27,10 @@ public class AssetManager {
         AssetManager.getShader("assets/shaders/blur.glsl");
         AssetManager.getShader("assets/shaders/post-process.glsl");
         AssetManager.getShader("assets/shaders/light.glsl");
-        AssetManager.addSpritesheet("assets/textures/font.png",
-                new Spritesheet(AssetManager.getTexture("assets/textures/font.png"), 16, 16, 0));
+        AssetManager.addSpritesheet("assets/textures/99c-font.png",
+                new Spritesheet(AssetManager.getTexture("assets/textures/99c-font.png"), 16, 16, 0));
+        AssetManager.addSpritesheet("assets/textures/spritesheet.png",
+                new Spritesheet(AssetManager.getTexture("assets/textures/spritesheet.png"), 16, 16, 0));
     }
 
     public static int getNextID() {
@@ -71,6 +71,16 @@ public class AssetManager {
         File file = new File(name);
         assert spritesheets.containsKey(file.getAbsolutePath()) : "Error: Spritesheet not found";
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
+    public static ColorPalette getColorPalette(String name) {
+        File file = new File(name);
+        if (!colorPalettes.containsKey(file.getAbsolutePath())) {
+            ColorPalette colorPalette = new ColorPalette(name);
+            colorPalettes.put(file.getAbsolutePath(), colorPalette);
+            return colorPalette;
+        }
+        return colorPalettes.get(file.getAbsolutePath());
     }
 
     public static Framebuffer createFramebuffer(String name, int width, int height) {

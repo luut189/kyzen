@@ -11,9 +11,9 @@ public class GameObject {
     private final Map<Class<? extends Component>, Component> componentMap;
     private final Transform transform;
 
-    private final int zIndex;
+    private final float zIndex;
 
-    public GameObject(Transform transform, int zIndex) {
+    public GameObject(Transform transform, float zIndex) {
         this.id = AssetManager.getNextID();
         this.componentMap = new HashMap<>();
         this.transform = transform;
@@ -65,7 +65,7 @@ public class GameObject {
         return id;
     }
 
-    public int getzIndex() {
+    public float getzIndex() {
         return zIndex;
     }
 }

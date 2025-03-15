@@ -40,11 +40,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private int vaoID, vboID;
     private final int maxBatchSize;
     private final Shader shader;
-    private final int zIndex;
+    private final float zIndex;
 
     private final Framebuffer renderBuffer;
 
-    public RenderBatch(int maxBatchSize, int zIndex) {
+    public RenderBatch(int maxBatchSize, float zIndex) {
         shader = AssetManager.getShader("assets/shaders/default.glsl");
         sprites = new SpriteComponent[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -264,12 +264,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return textures.contains(texture);
     }
 
-    public int getzIndex() {
+    public float getzIndex() {
         return zIndex;
     }
 
     @Override
     public int compareTo(RenderBatch o) {
-        return Integer.compare(zIndex, o.getzIndex());
+        return Float.compare(zIndex, o.getzIndex());
     }
 }

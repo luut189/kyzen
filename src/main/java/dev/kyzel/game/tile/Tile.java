@@ -2,10 +2,14 @@ package dev.kyzel.game.tile;
 
 import dev.kyzel.engine.GameObject;
 import dev.kyzel.engine.Transform;
+import dev.kyzel.gfx.Spritesheet;
+import dev.kyzel.utils.AssetManager;
 
-public class Tile extends GameObject {
+public abstract class Tile extends GameObject {
 
-    public Tile(Transform transform, int zIndex) {
+    protected Spritesheet sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
+
+    public Tile(Transform transform, float zIndex) {
         super(transform, zIndex);
     }
 

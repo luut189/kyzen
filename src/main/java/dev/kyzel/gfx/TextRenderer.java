@@ -18,7 +18,7 @@ public class TextRenderer {
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[],.?:;\"";
-    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/font.png");
+    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/99c-font.png");
 
     // Method with just mandatory parameters
     public static void renderText(String text, Transform transform, Vector4f color) {
@@ -66,7 +66,7 @@ public class TextRenderer {
         Vector2f position = new Vector2f(baseTransform.position);
 
         // in order to make this work, render text have to be called after every other game object
-        int zIndex = SceneManager.getCurrentScene().getCurrentMaxZIndex() + 1;
+        float zIndex = SceneManager.getCurrentScene().getCurrentMaxZIndex() + 1;
 
         int maxChar = 0, charCount = 0, line = 1;
         for (char c : text.toUpperCase().toCharArray()) {
@@ -102,7 +102,7 @@ public class TextRenderer {
                         new Transform(new Vector2f(offset), baseTransform.scale),
                         new SpriteComponent(FONT_SHEET.getSprite(index), shadowColor),
                         lifetime,
-                        zIndex - 1
+                        zIndex - 0.01f
                 );
             }
 
@@ -129,14 +129,14 @@ public class TextRenderer {
                     new Transform(new Vector2f(baseTransform.position.x, newPositionY), bgScale),
                     new SpriteComponent(backgroundColor),
                     lifetime,
-                    zIndex - (flag == Flag.DOUBLED ? 2 : 1)
+                    zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f)
             );
         }
     }
 
     private static void createGameObject(Transform transform,
                                          SpriteComponent spriteComponent,
-                                         float lifetime, int zIndex) {
+                                         float lifetime, float zIndex) {
         GameObject gameObject = new GameObject(transform, zIndex);
         if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
         gameObject.addComponent(spriteComponent);

@@ -18,7 +18,7 @@ public abstract class Scene {
     protected final List<GameObject> gameObjectList = new ArrayList<>();
     protected final Renderer renderer = new Renderer();
 
-    private int currentMaxZIndex = 0;
+    private float currentMaxZIndex = 0;
 
     private boolean isRunning = false;
 
@@ -86,7 +86,7 @@ public abstract class Scene {
         }
     }
 
-    public int getCurrentMaxZIndex() {
+    public float getCurrentMaxZIndex() {
         return currentMaxZIndex;
     }
 
