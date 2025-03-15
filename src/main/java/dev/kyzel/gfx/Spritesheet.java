@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spritesheet {
+    public static final int TILE_START_INDEX = 58;
+    public final int TILE_NUM;
+
     private final List<Sprite> sprites;
 
     public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int spacing) {
@@ -35,6 +38,7 @@ public class Spritesheet {
                 sprites.add(sprite);
             }
         }
+        TILE_NUM = sprites.size() - TILE_START_INDEX;
         Debug.log(sprites.size() + " sprites loaded");
     }
 
