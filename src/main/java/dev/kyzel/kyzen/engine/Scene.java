@@ -68,7 +68,16 @@ public abstract class Scene {
         } else if (MouseListener.getScrollY() < 0) {
             camera.zoomOut();
         } else if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
-            camera.resetZoom();
+            camera.reset();
+        }
+
+        // Camera Dragging Function
+        // WARNING: When dragging, there is a chance for the camera to get yeet very far.
+        //          You can click the middle mouse button to reset the camera.
+        float speed = 1.5f * objectScale * (1 / camera.getZoom());
+        if (MouseListener.isDragging()) {
+            camera.getPosition().x += MouseListener.getDeltaX() * delta * speed;
+            camera.getPosition().y -= MouseListener.getDeltaY() * delta * speed;
         }
     }
 
