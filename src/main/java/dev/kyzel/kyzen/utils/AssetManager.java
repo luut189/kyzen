@@ -5,6 +5,8 @@ import dev.kyzel.kyzen.gfx.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -35,34 +37,34 @@ public class AssetManager {
         return currentID++;
     }
 
-    public static Shader getShader(String name) {
+    private static <T> T getResource(String name, Map<String, T> resourcesMap,
+                                    Function<String, T> assetCreator,
+                                    Consumer<T> onCreate) {
         File file = new File(name);
-        if (shaders.containsKey(file.getAbsolutePath())) {
-            return shaders.get(file.getAbsolutePath());
-        }
+        return resourcesMap.computeIfAbsent(file.getAbsolutePath(), key -> {
+            T asset = assetCreator.apply(key);
+            onCreate.accept(asset);
+            return asset;
+        });
+    }
 
-        Shader shader = new Shader(name);
-        shader.compileShader();
-        shaders.put(file.getAbsolutePath(), shader);
-        return shader;
+    public static Shader getShader(String name) {
+        return getResource(name, shaders, Shader::new, Shader::compileShader);
     }
 
     public static Texture getTexture(String name) {
-        File file = new File(name);
-        if (textures.containsKey(file.getAbsolutePath())) {
-            return textures.get(file.getAbsolutePath());
-        }
+        return getResource(name, textures, Texture::new, t -> {});
+    }
 
-        Texture texture = new Texture(name);
-        textures.put(file.getAbsolutePath(), texture);
-        return texture;
+    public static ColorPalette getColorPalette(String name) {
+        return getResource(name, colorPalettes, ColorPalette::new, t -> {});
     }
 
     public static void addSpritesheet(String name, int spriteWidth, int spriteHeight, int spacing) {
         File file = new File(name);
         if (!spritesheets.containsKey(file.getAbsolutePath())) {
             spritesheets.put(file.getAbsolutePath(),
-                             new Spritesheet(AssetManager.getTexture(name), spriteWidth, spriteHeight, spacing));
+                    new Spritesheet(AssetManager.getTexture(name), spriteWidth, spriteHeight, spacing));
         }
     }
 
@@ -70,16 +72,6 @@ public class AssetManager {
         File file = new File(name);
         assert spritesheets.containsKey(file.getAbsolutePath()) : "Error: Spritesheet not found";
         return spritesheets.getOrDefault(file.getAbsolutePath(), null);
-    }
-
-    public static ColorPalette getColorPalette(String name) {
-        File file = new File(name);
-        if (!colorPalettes.containsKey(file.getAbsolutePath())) {
-            ColorPalette colorPalette = new ColorPalette(name);
-            colorPalettes.put(file.getAbsolutePath(), colorPalette);
-            return colorPalette;
-        }
-        return colorPalettes.get(file.getAbsolutePath());
     }
 
     public static Framebuffer createFramebuffer(String name, int width, int height) {
