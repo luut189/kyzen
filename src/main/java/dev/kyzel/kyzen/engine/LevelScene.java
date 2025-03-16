@@ -1,16 +1,21 @@
 package dev.kyzel.kyzen.engine;
 
-import dev.kyzel.kyzen.game.tiles.SandTile;
+import dev.kyzel.kyzen.game.entity.Player;
+import dev.kyzel.kyzen.game.tiles.LavaTile;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.TextRenderer;
+import dev.kyzel.kyzen.utils.AssetManager;
 import org.joml.Vector2f;
 
 public class LevelScene extends Scene {
 
     @Override
     public void init() {
-        float objectScale = 64f;
         this.camera = new Camera(new Vector2f());
+        sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
+
+        Player p = new Player(new Transform(new Vector2f(Window.get().getWidth() / 2f, Window.get().getHeight() / 2f), objectScale), 3);
+        this.addGameObject(p);
 
         int x = 0, y = 0;
         for (int i = 0; i < 100; i++) {
@@ -18,7 +23,7 @@ public class LevelScene extends Scene {
                 y += (int) objectScale;
                 x = 0;
             }
-            GameObject o1 = new SandTile(new Transform(new Vector2f(x, y), objectScale), 2);
+            GameObject o1 = new LavaTile(new Transform(new Vector2f(x, y), objectScale), 2);
             this.addGameObject(o1);
             x += (int) objectScale;
         }
@@ -26,7 +31,7 @@ public class LevelScene extends Scene {
                 new Transform(new Vector2f(10, 10), objectScale),
                 ColorPalette.getDefaultRGBA(0, 1, 0),
                 ColorPalette.getDefaultRGBA(0.5f, 0.5f, 0.5f),
-                 TextRenderer.Flag.DOUBLED);
+                TextRenderer.Flag.DOUBLED);
     }
 
     @Override
