@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spritesheet {
-    public static final int TILE_START_INDEX = 58;
-    public final int TILE_NUM;
+    public static final int FONT_TEXTURE_NUM = 58;
+    public static final int TILE_TEXTURE_NUM = 4;
+    public static final int PLAYER_TEXTURE_NUM = 7;
 
     private final List<Sprite> sprites;
 
@@ -31,14 +32,13 @@ public class Spritesheet {
                         new Vector2f(rightX, topY),
                         new Vector2f(rightX, bottomY),
                         new Vector2f(leftX, bottomY),
-                        new Vector2f(leftX, topY)
+                        new Vector2f(leftX, topY),
                 };
 
                 Sprite sprite = new Sprite(texture, texCoords);
                 sprites.add(sprite);
             }
         }
-        TILE_NUM = sprites.size() - TILE_START_INDEX;
         Debug.log(sprites.size() + " sprites loaded");
     }
 

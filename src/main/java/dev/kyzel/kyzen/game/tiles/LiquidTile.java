@@ -7,7 +7,7 @@ import org.joml.Vector4f;
 
 public abstract class LiquidTile extends AnimatedTile {
 
-    private static final int LIQUID_OFFSET = Spritesheet.TILE_START_INDEX + 1;
+    private static final int LIQUID_OFFSET = Spritesheet.FONT_TEXTURE_NUM + 1;
     private static final int NUM_SPRITE = 3;
 
     protected Vector4f color;

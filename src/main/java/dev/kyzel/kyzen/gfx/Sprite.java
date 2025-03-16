@@ -9,11 +9,11 @@ public class Sprite {
 
     public Sprite(Texture texture) {
         this.texture = texture;
-        this.texCoords = new Vector2f[] {
-            new Vector2f(1, 1),
-            new Vector2f(1, 0),
-            new Vector2f(0, 0),
-            new Vector2f(0, 1)
+        this.texCoords = new Vector2f[]{
+                new Vector2f(1, 1),
+                new Vector2f(1, 0),
+                new Vector2f(0, 0),
+                new Vector2f(0, 1)
         };
     }
 
@@ -21,6 +21,16 @@ public class Sprite {
         this.texture = texture;
         this.texCoords = texCoords;
     }
+
+    public Sprite flipHorizontally() {
+        Vector2f[] newTexCoords = new Vector2f[texCoords.length];
+        newTexCoords[3] = texCoords[0];
+        newTexCoords[2] = texCoords[1];
+        newTexCoords[1] = texCoords[2];
+        newTexCoords[0] = texCoords[3];
+        return new Sprite(texture, newTexCoords);
+    }
+
 
     public Texture getTexture() {
         return texture;

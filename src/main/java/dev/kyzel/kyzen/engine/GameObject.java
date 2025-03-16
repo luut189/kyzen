@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.engine;
 
+import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.utils.AssetManager;
 
 import java.util.HashMap;
@@ -7,10 +8,11 @@ import java.util.Map;
 
 public class GameObject {
 
+    protected Spritesheet sheet;
+    protected final Transform transform;
+
     private final int id;
     private final Map<Class<? extends Component>, Component> componentMap;
-    private final Transform transform;
-
     private final float zIndex;
 
     public GameObject(Transform transform, float zIndex) {
@@ -18,6 +20,7 @@ public class GameObject {
         this.componentMap = new HashMap<>();
         this.transform = transform;
         this.zIndex = zIndex;
+        this.sheet = SceneManager.getCurrentScene().getSpritesheet();
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass) {

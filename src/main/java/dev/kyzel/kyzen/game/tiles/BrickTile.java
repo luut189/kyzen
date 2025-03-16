@@ -8,7 +8,7 @@ import org.joml.Vector4f;
 
 public class BrickTile extends Tile {
 
-    private static final int BRICK_OFFSET = Spritesheet.TILE_START_INDEX;
+    private static final int BRICK_OFFSET = Spritesheet.FONT_TEXTURE_NUM;
 
     public BrickTile(Transform transform, float zIndex, Vector3f color) {
         super(transform, zIndex);
