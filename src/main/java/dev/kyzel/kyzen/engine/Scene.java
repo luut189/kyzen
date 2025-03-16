@@ -2,9 +2,8 @@ package dev.kyzel.kyzen.engine;
 
 import dev.kyzel.kyzen.engine.components.LifetimeComponent;
 import dev.kyzel.kyzen.gfx.Renderer;
-import dev.kyzel.kyzen.input.KeyListener;
+import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.MouseListener;
-import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,16 +14,15 @@ import static org.lwjgl.glfw.GLFW.*;
 public abstract class Scene {
 
     protected Camera camera;
+    protected Spritesheet sheet;
     protected final List<GameObject> gameObjectList = new ArrayList<>();
     protected final Renderer renderer = new Renderer();
+    protected float objectScale = 64f;
 
     private float currentMaxZIndex = 0;
-
     private boolean isRunning = false;
 
-    public void init() {
-
-    }
+    public abstract void init();
 
     public void start() {
         for (GameObject gameObject : gameObjectList) {
@@ -65,29 +63,33 @@ public abstract class Scene {
     }
 
     public void handleCameraMovement(float delta) {
-        float speed = 200f * 1 / camera.getZoom();
-        Vector2f cameraPosition = camera.getPosition();
-        if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            cameraPosition.y += delta * speed;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
-            cameraPosition.y -= delta * speed;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
-            cameraPosition.x -= delta * speed;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
-            cameraPosition.x += delta * speed;
-        }
         if (MouseListener.getScrollY() > 0) {
             camera.zoomIn();
         } else if (MouseListener.getScrollY() < 0) {
             camera.zoomOut();
+        } else if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
+            camera.resetZoom();
         }
     }
 
     public float getCurrentMaxZIndex() {
         return currentMaxZIndex;
+    }
+
+    public float getObjectScale() {
+        return objectScale;
+    }
+
+    public void scale(float scale) {
+        this.objectScale *= scale;
+        for (GameObject gameObject : gameObjectList) {
+            gameObject.getTransform().scale.x *= scale;
+            gameObject.getTransform().scale.y *= scale;
+        }
+    }
+
+    public Spritesheet getSpritesheet() {
+        return sheet;
     }
 
     public Renderer getRenderer() {

@@ -8,7 +8,7 @@ public class Camera {
     private final Matrix4f projectionMatrix;
     private final Matrix4f viewMatrix;
     private final Vector2f position;
-    private float zoom = 1.0f; // Default zoom level
+    private float zoom = 1.0f;
 
     public Camera(Vector2f position) {
         this.position = position;
@@ -28,9 +28,11 @@ public class Camera {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
-        viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
-                          cameraFront.add(position.x, position.y, 0.0f),
-                          cameraUp);
+        viewMatrix.lookAt(
+                new Vector3f(position.x, position.y, 20.0f),
+                cameraFront.add(position.x, position.y, 0.0f),
+                cameraUp
+        );
 
         return this.viewMatrix;
     }
@@ -48,9 +50,13 @@ public class Camera {
     }
 
     public void setZoom(float newZoom) {
-        // Prevent zooming too far in or out
-        this.zoom = Math.max(0.1f, Math.min(newZoom, 5.0f)); // Zoom range: 0.1x to 5x
+        // Zoom range: 0.1x to 5x
+        this.zoom = Math.max(0.1f, Math.min(newZoom, 5.0f));
         adjustProjection();
+    }
+
+    public void resetZoom() {
+        setZoom(1.0f);
     }
 
     public void zoomIn() {
