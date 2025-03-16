@@ -9,6 +9,9 @@ import dev.kyzel.kyzen.utils.AssetManager;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TextRenderer {
 
     public enum Flag {
@@ -18,51 +21,62 @@ public class TextRenderer {
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[],.?:;\"";
-    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/99c-font.png");
+    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-    // Method with just mandatory parameters
-    public static void renderText(String text, Transform transform, Vector4f color) {
-        renderText(text, transform, color, null, -1, Flag.NONE);
+    public static final List<GameObject> normalBatch = new ArrayList<>();
+    public static final List<GameObject> requiresCleanupBatch = new ArrayList<>();
+
+    private final String text;
+    private final Transform transform;
+    private final Vector4f color;
+    private Vector4f backgroundColor;
+    private float lifetime;
+    private Flag flag;
+    private boolean requiresCleanup;
+
+    private TextRenderer(String text, Transform transform, Vector4f color) {
+        this.text = text;
+        this.transform = transform;
+        this.color = color;
+        this.backgroundColor = null;
+        this.lifetime = -1;
+        this.flag = Flag.NONE;
+        this.requiresCleanup = true;
     }
 
-    // Method with lifetime
-    public static void renderText(String text, Transform transform, Vector4f color, float lifetime) {
-        renderText(text, transform, color, null, lifetime, Flag.NONE);
+    public TextRenderer setBackgroundColor(Vector4f backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        return this;
     }
 
-    // Method with background
-    public static void renderText(String text, Transform transform, Vector4f color, Vector4f backgroundColor) {
-        renderText(text, transform, color, backgroundColor, -1, Flag.NONE);
+    public TextRenderer setLifetime(float lifetime) {
+        this.lifetime = lifetime;
+        return this;
     }
 
-    // Method with flags
-    public static void renderText(String text, Transform transform, Vector4f color, Flag flag) {
-        renderText(text, transform, color, null, -1, flag);
+    public TextRenderer setFlag(Flag flag) {
+        this.flag = flag;
+        return this;
     }
 
-    // Method with background and lifetime
-    public static void renderText(String text, Transform transform, Vector4f color,
-                                  Vector4f backgroundColor, float lifetime) {
-        renderText(text, transform, color, backgroundColor, lifetime, Flag.NONE);
+    public TextRenderer setRequiresCleanup(boolean requiresCleanup) {
+        this.requiresCleanup = requiresCleanup;
+        return this;
     }
 
-    // Method with color and flags and lifetime
-    public static void renderText(String text, Transform transform, Vector4f color,
-                                  float lifetime, Flag flag) {
-        renderText(text, transform, color, null, lifetime, flag);
+    public void render() {
+        renderText(text, transform, color, backgroundColor, lifetime, flag, requiresCleanup);
     }
 
-    // Method with background and flags
-    public static void renderText(String text, Transform transform, Vector4f color,
-                                  Vector4f backgroundColor, Flag flag) {
-        renderText(text, transform, color, backgroundColor, -1, flag);
+    public static TextRenderer create(String text, Transform transform, Vector4f color) {
+        return new TextRenderer(text, transform, color);
     }
 
-    public static void renderText(String text,
-                                  Transform baseTransform,
-                                  Vector4f color, Vector4f backgroundColor,
-                                  float lifetime,
-                                  Flag flag) {
+    private static void renderText(String text,
+                                   Transform baseTransform,
+                                   Vector4f color, Vector4f backgroundColor,
+                                   float lifetime,
+                                   Flag flag, boolean requiresCleanup) {
         Vector2f position = new Vector2f(baseTransform.position);
 
         // in order to make this work, render text have to be called after every other game object
@@ -102,16 +116,17 @@ public class TextRenderer {
                         new Transform(new Vector2f(offset), baseTransform.scale),
                         new SpriteComponent(FONT_SHEET.getSprite(index), shadowColor),
                         lifetime,
-                        zIndex - 0.01f
-                );
+                        zIndex - 0.01f,
+                        requiresCleanup);
             }
+            maxChar = Math.max(maxChar, charCount);
 
             createGameObject(
                     new Transform(new Vector2f(position), baseTransform.scale),
                     new SpriteComponent(FONT_SHEET.getSprite(index), color),
                     lifetime,
-                    zIndex
-            );
+                    zIndex,
+                    requiresCleanup);
 
             position.x += baseTransform.scale.x;
         }
@@ -129,16 +144,28 @@ public class TextRenderer {
                     new Transform(new Vector2f(baseTransform.position.x, newPositionY), bgScale),
                     new SpriteComponent(backgroundColor),
                     lifetime,
-                    zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f)
-            );
+                    zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f),
+                    requiresCleanup);
         }
+    }
+
+    public static void cleanup() {
+        for (GameObject gameObject : requiresCleanupBatch) {
+            SceneManager.getCurrentScene().removeGameObject(gameObject);
+        }
+        requiresCleanupBatch.clear();
     }
 
     private static void createGameObject(Transform transform,
                                          SpriteComponent spriteComponent,
-                                         float lifetime, float zIndex) {
+                                         float lifetime, float zIndex, boolean requiresCleanup) {
         GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
         if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
+        if (requiresCleanup) {
+            requiresCleanupBatch.add(gameObject);
+        } else {
+            normalBatch.add(gameObject);
+        }
         SceneManager.getCurrentScene().addGameObject(gameObject);
     }
 
