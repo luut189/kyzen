@@ -50,20 +50,25 @@ public class Camera {
     }
 
     public void setZoom(float newZoom) {
-        // Zoom range: 0.1x to 5x
         this.zoom = Math.max(0.1f, Math.min(newZoom, 5.0f));
         adjustProjection();
     }
 
-    public void resetZoom() {
+    public void moveCamera(float dx, float dy) {
+        this.position.add(dx, dy);
+    }
+
+    public void reset() {
         setZoom(1.0f);
+        position.x = 0.0f;
+        position.y = 0.0f;
     }
 
     public void zoomIn() {
-        setZoom(zoom * 1.1f); // Increase zoom
+        setZoom(zoom * 1.1f);
     }
 
     public void zoomOut() {
-        setZoom(zoom * 0.9f); // Decrease zoom
+        setZoom(zoom * 0.9f);
     }
 }
