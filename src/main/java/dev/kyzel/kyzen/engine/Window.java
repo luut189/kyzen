@@ -20,6 +20,7 @@ public class Window {
     private final String title;
     private long glfwWindow;
     private float targetAspectRatio = 16f / 9f;
+    private float currentFPS = 0f;
 
     private static Window window = null;
 
@@ -64,6 +65,10 @@ public class Window {
 
     public int getVpY() {
         return vpY;
+    }
+
+    public float getCurrentFPS() {
+        return currentFPS;
     }
 
     public void run() {
@@ -137,7 +142,8 @@ public class Window {
                 } else if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
                     Debug.setDebug(false);
                 }
-                Debug.log("FPS: " + Math.floor(1f / deltaTime));
+                currentFPS = 1f / deltaTime;
+                Debug.log("FPS: " + currentFPS, deltaTime);
                 SceneManager.updateScene(deltaTime);
                 MouseListener.endFrame();
             }
