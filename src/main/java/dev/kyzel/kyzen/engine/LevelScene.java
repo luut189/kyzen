@@ -14,7 +14,8 @@ public class LevelScene extends Scene {
         this.camera = new Camera(new Vector2f());
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-        Player p = new Player(new Transform(new Vector2f(Window.get().getWidth() / 2f, Window.get().getHeight() / 2f), objectScale), 3);
+        // spawn a player at the middle of the
+        Player p = new Player(new Transform(new Vector2f(0,0), objectScale), 3);
         this.addGameObject(p);
 
         int x = 0, y = 0;
