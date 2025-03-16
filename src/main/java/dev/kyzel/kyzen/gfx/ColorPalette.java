@@ -15,6 +15,21 @@ public class ColorPalette {
         return AssetManager.getColorPalette("assets/colors/resurrect-64.hex");
     }
 
+    public static Vector3f getDefaultRandomRGB() {
+        return getDefaultPalette().getRGB(
+                (float) Math.random(),
+                (float) Math.random(),
+                (float) Math.random());
+    }
+
+    public static Vector4f getDefaultRandomRGBA(float a) {
+        return new Vector4f(getDefaultRandomRGB(), a);
+    }
+
+    public static Vector4f getDefaultRandomRGBA() {
+        return getDefaultRandomRGBA(1f);
+    }
+
     public static Vector4f getDefaultRGBA(float r, float g, float b, float a) {
         return getDefaultPalette().getRGBA(r, g, b, a);
     }
