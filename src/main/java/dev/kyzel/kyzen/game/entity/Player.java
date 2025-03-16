@@ -1,9 +1,7 @@
 package dev.kyzel.kyzen.game.entity;
 
-import dev.kyzel.kyzen.engine.Camera;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
-import dev.kyzel.kyzen.engine.Window;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
@@ -102,13 +100,9 @@ public class Player extends Entity {
 
         // TODO: convert camera's coordinates to world's coordinates
         if (vertical) {
-            SceneManager.getCurrentScene().getCamera().getPosition().y += entitySpeed * deltaTime * dir;
+            transform.position.y += entitySpeed * deltaTime * dir;
         } else if (horizontal) {
-            SceneManager.getCurrentScene().getCamera().getPosition().x += entitySpeed * deltaTime * dir;
+            transform.position.x += entitySpeed * deltaTime * dir;
         }
-
-        Camera camera = SceneManager.getCurrentScene().getCamera();
-        transform.position.x = camera.getPosition().x + Window.get().getWidth() / 2f;
-        transform.position.y = camera.getPosition().y + Window.get().getHeight() / 2f;
     }
 }
