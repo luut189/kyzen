@@ -1,6 +1,7 @@
 package dev.kyzel.kyzen.engine;
 
 import dev.kyzel.kyzen.gfx.LightRenderer;
+import dev.kyzel.kyzen.input.ControlHandler;
 import dev.kyzel.kyzen.input.KeyListener;
 import dev.kyzel.kyzen.input.MouseListener;
 import dev.kyzel.kyzen.utils.AssetManager;
@@ -125,7 +126,7 @@ public class Window {
         glViewport(0, 0, width, height);
         AssetManager.init();
 
-        SceneManager.changeScene(0);
+        SceneManager.changeScene(new LevelScene());
     }
 
     public void loop() {
@@ -137,9 +138,9 @@ public class Window {
             glfwPollEvents();
 
             if (deltaTime > 0.0f) {
-                if (KeyListener.isKeyPressed(GLFW_KEY_Z)) {
+                if (ControlHandler.DEBUG_ON.pressed()) {
                     Debug.setDebug(true);
-                } else if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
+                } else if (ControlHandler.DEBUG_OFF.pressed()) {
                     Debug.setDebug(false);
                 }
                 currentFPS = 1f / deltaTime;

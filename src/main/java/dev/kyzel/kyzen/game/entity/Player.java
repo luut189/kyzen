@@ -5,9 +5,7 @@ import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
-import dev.kyzel.kyzen.input.KeyListener;
-
-import static org.lwjgl.glfw.GLFW.*;
+import dev.kyzel.kyzen.input.ControlHandler;
 
 public class Player extends Entity {
 
@@ -69,13 +67,13 @@ public class Player extends Entity {
     protected void updateDirection() {
         Direction previousDirection = direction;
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
+        if (ControlHandler.UP.down()) {
             direction = Direction.UP;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
+        } else if (ControlHandler.DOWN.down()) {
             direction = Direction.DOWN;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
+        } else if (ControlHandler.LEFT.down()) {
             direction = Direction.LEFT;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
+        } else if (ControlHandler.RIGHT.down()) {
             direction = Direction.RIGHT;
         } else {
             direction = Direction.NONE;
