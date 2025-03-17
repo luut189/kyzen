@@ -88,11 +88,17 @@ public class Renderer {
             renderBatch.render();
         }
 
+        // render all texts
+        TextRenderer.renderAllTexts();
+
         // render and composite lights
         compositeBuffer.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (RenderBatch renderBatch : batches) {
             blendFramebuffer(renderBatch.getFramebuffer(), compositeBuffer);
+        }
+        for (int i = 0; i < TextRenderer.getRenderBatches().size(); i++) {
+            blendFramebuffer(TextRenderer.getFramebuffer(i), compositeBuffer);
         }
         LightRenderer.getInstance().renderToFramebuffer(compositeBuffer);
         compositeBuffer.unbind();

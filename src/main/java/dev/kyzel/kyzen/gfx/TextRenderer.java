@@ -10,7 +10,10 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static dev.kyzel.kyzen.gfx.Renderer.MAX_BATCH_SIZE;
 
 public class TextRenderer {
 
@@ -23,16 +26,15 @@ public class TextRenderer {
     public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[],.?:;\"";
     public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-    public static final List<GameObject> normalBatch = new ArrayList<>();
-    public static final List<GameObject> requiresCleanupBatch = new ArrayList<>();
+    private static final List<GameObject> objectBatch = new ArrayList<>();
+    private static final List<RenderBatch> renderBatches = new ArrayList<>();
 
-    private final String text;
-    private final Transform transform;
-    private final Vector4f color;
+    private String text;
+    private Transform transform;
+    private Vector4f color;
     private Vector4f backgroundColor;
     private float lifetime;
     private Flag flag;
-    private boolean requiresCleanup;
 
     private TextRenderer(String text, Transform transform, Vector4f color) {
         this.text = text;
@@ -41,7 +43,21 @@ public class TextRenderer {
         this.backgroundColor = null;
         this.lifetime = -1;
         this.flag = Flag.NONE;
-        this.requiresCleanup = true;
+    }
+
+    public TextRenderer setText(String text) {
+        this.text = text;
+        return this;
+    }
+
+    public TextRenderer setTransform(Transform transform) {
+        this.transform = transform;
+        return this;
+    }
+
+    public TextRenderer setColor(Vector4f color) {
+        this.color = color;
+        return this;
     }
 
     public TextRenderer setBackgroundColor(Vector4f backgroundColor) {
@@ -59,13 +75,8 @@ public class TextRenderer {
         return this;
     }
 
-    public TextRenderer setRequiresCleanup(boolean requiresCleanup) {
-        this.requiresCleanup = requiresCleanup;
-        return this;
-    }
-
     public void render() {
-        renderText(text, transform, color, backgroundColor, lifetime, flag, requiresCleanup);
+        renderText(text, transform, color, backgroundColor, lifetime, flag);
     }
 
     public static TextRenderer create(String text, Transform transform, Vector4f color) {
@@ -76,7 +87,7 @@ public class TextRenderer {
                                    Transform baseTransform,
                                    Vector4f color, Vector4f backgroundColor,
                                    float lifetime,
-                                   Flag flag, boolean requiresCleanup) {
+                                   Flag flag) {
         Vector2f position = new Vector2f(baseTransform.position);
 
         // in order to make this work, render text have to be called after every other game object
@@ -116,8 +127,7 @@ public class TextRenderer {
                         new Transform(new Vector2f(offset), baseTransform.scale),
                         new SpriteComponent(FONT_SHEET.getSprite(index), shadowColor),
                         lifetime,
-                        zIndex - 0.01f,
-                        requiresCleanup);
+                        zIndex - 0.01f);
             }
             maxChar = Math.max(maxChar, charCount);
 
@@ -125,8 +135,7 @@ public class TextRenderer {
                     new Transform(new Vector2f(position), baseTransform.scale),
                     new SpriteComponent(FONT_SHEET.getSprite(index), color),
                     lifetime,
-                    zIndex,
-                    requiresCleanup);
+                    zIndex);
 
             position.x += baseTransform.scale.x;
         }
@@ -144,29 +153,57 @@ public class TextRenderer {
                     new Transform(new Vector2f(baseTransform.position.x, newPositionY), bgScale),
                     new SpriteComponent(backgroundColor),
                     lifetime,
-                    zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f),
-                    requiresCleanup);
+                    zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f));
+        }
+    }
+
+    public static List<RenderBatch> getRenderBatches() {
+        return renderBatches;
+    }
+
+    public static Framebuffer getFramebuffer(int i) {
+        return renderBatches.get(i).getFramebuffer();
+    }
+
+    public static void renderAllTexts() {
+        for (RenderBatch renderBatch : renderBatches) {
+            renderBatch.render();
         }
     }
 
     public static void cleanup() {
-        for (GameObject gameObject : requiresCleanupBatch) {
-            SceneManager.getCurrentScene().removeGameObject(gameObject);
+        for (GameObject o : objectBatch) {
+            for (RenderBatch renderBatch : renderBatches) {
+                if (renderBatch.removeSprite(o.getComponent(SpriteComponent.class))) break;
+            }
         }
-        requiresCleanupBatch.clear();
+        objectBatch.clear();
     }
 
     private static void createGameObject(Transform transform,
                                          SpriteComponent spriteComponent,
-                                         float lifetime, float zIndex, boolean requiresCleanup) {
+                                         float lifetime, float zIndex) {
         GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
         if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
-        if (requiresCleanup) {
-            requiresCleanupBatch.add(gameObject);
-        } else {
-            normalBatch.add(gameObject);
+        objectBatch.add(gameObject);
+        boolean added = false;
+        for (RenderBatch renderBatch : renderBatches) {
+            if (renderBatch.hasRoom() && renderBatch.getzIndex() == zIndex) {
+                Texture texture = spriteComponent.getTexture();
+                if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTextureRoom())) {
+                    renderBatch.addSprite(spriteComponent);
+                    added = true;
+                    break;
+                }
+            }
         }
-        SceneManager.getCurrentScene().addGameObject(gameObject);
+        if (!added) {
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, zIndex);
+            newBatch.start();
+            renderBatches.add(newBatch);
+            newBatch.addSprite(spriteComponent);
+            Collections.sort(renderBatches);
+        }
     }
 
 }
