@@ -3,6 +3,7 @@ package dev.kyzel.kyzen.engine;
 import dev.kyzel.kyzen.game.entity.Player;
 import dev.kyzel.kyzen.game.tiles.FloorTile;
 import dev.kyzel.kyzen.gfx.ColorPalette;
+import dev.kyzel.kyzen.gfx.Text;
 import dev.kyzel.kyzen.gfx.TextRenderer;
 import dev.kyzel.kyzen.utils.AssetManager;
 import org.joml.Vector2f;
@@ -10,7 +11,7 @@ import org.joml.Vector2f;
 public class LevelScene extends Scene {
 
     private float currentDelta;
-    TextRenderer text;
+    Text text;
 
     @Override
     public void init() {
@@ -31,7 +32,7 @@ public class LevelScene extends Scene {
             this.addGameObject(o1);
             x += (int) objectScale;
         }
-        text = TextRenderer.create("Current FPS: " + Math.round(Window.get().getCurrentFPS()),
+        text = Text.create("Current FPS: " + Math.round(Window.get().getCurrentFPS()),
                         new Transform(new Vector2f(10, 10), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
                 .setBackgroundColor(ColorPalette.getDefaultRGBA(1f, 0.5f, 0.5f))

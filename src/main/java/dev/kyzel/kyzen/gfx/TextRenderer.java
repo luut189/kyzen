@@ -29,58 +29,16 @@ public class TextRenderer {
     private static final List<GameObject> objectBatch = new ArrayList<>();
     private static final List<RenderBatch> renderBatches = new ArrayList<>();
 
-    private String text;
-    private Transform transform;
-    private Vector4f color;
-    private Vector4f backgroundColor;
-    private float lifetime;
-    private Flag flag;
-
-    private TextRenderer(String text, Transform transform, Vector4f color) {
-        this.text = text;
-        this.transform = transform;
-        this.color = color;
-        this.backgroundColor = null;
-        this.lifetime = -1;
-        this.flag = Flag.NONE;
+    public static Text create(String text, Transform transform, Vector4f color) {
+        return Text.create(text, transform, color);
     }
 
-    public TextRenderer setText(String text) {
-        this.text = text;
-        return this;
-    }
-
-    public TextRenderer setTransform(Transform transform) {
-        this.transform = transform;
-        return this;
-    }
-
-    public TextRenderer setColor(Vector4f color) {
-        this.color = color;
-        return this;
-    }
-
-    public TextRenderer setBackgroundColor(Vector4f backgroundColor) {
-        this.backgroundColor = backgroundColor;
-        return this;
-    }
-
-    public TextRenderer setLifetime(float lifetime) {
-        this.lifetime = lifetime;
-        return this;
-    }
-
-    public TextRenderer setFlag(Flag flag) {
-        this.flag = flag;
-        return this;
-    }
-
-    public void render() {
-        renderText(text, transform, color, backgroundColor, lifetime, flag);
-    }
-
-    public static TextRenderer create(String text, Transform transform, Vector4f color) {
-        return new TextRenderer(text, transform, color);
+    public static void renderText(Text text) {
+        renderText(text.getText(),
+                   text.getTransform(),
+                   text.getColor(), text.getBackgroundColor(),
+                   text.getLifetime(),
+                   text.getFlag());
     }
 
     private static void renderText(String text,
