@@ -4,17 +4,20 @@ import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.AnimationComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.level.Level;
 
 public abstract class Entity extends GameObject {
 
     protected SpriteComponent spriteComponent;
     protected AnimationComponent animationComponent;
     protected Direction lastDirection, direction;
-
     protected float entitySpeed;
 
-    public Entity(Transform transform, float zIndex) {
+    protected Level level;
+
+    public Entity(Level level, Transform transform, float zIndex) {
         super(transform, zIndex);
+        this.level = level;
         animationComponent = new AnimationComponent();
         initAnimationFrames();
         this.addComponent(animationComponent);
@@ -26,7 +29,13 @@ public abstract class Entity extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         updateDirection();
+        float lastPosX = transform.position.x;
+        float lastPosY = transform.position.y;
         move(deltaTime);
+        if (level.collide(this)) {
+            transform.position.x = lastPosX;
+            transform.position.y = lastPosY;
+        }
         spriteComponent.setSprite(animationComponent.getSprite(direction != Direction.NONE ? direction : lastDirection));
     }
 
