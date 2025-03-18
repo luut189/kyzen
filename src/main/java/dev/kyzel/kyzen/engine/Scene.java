@@ -76,8 +76,7 @@ public abstract class Scene {
         //          You can click the middle mouse button to reset the camera.
         float speed = 1.5f * objectScale * (1 / camera.getZoom());
         if (MouseListener.isDragging()) {
-            camera.getPosition().x += MouseListener.getDeltaX() * delta * speed;
-            camera.getPosition().y -= MouseListener.getDeltaY() * delta * speed;
+            camera.moveCamera(MouseListener.getDeltaX() * delta * speed, -MouseListener.getDeltaY() * delta * speed);
         }
     }
 

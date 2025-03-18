@@ -1,7 +1,7 @@
 package dev.kyzel.kyzen.engine;
 
-import dev.kyzel.kyzen.game.entity.Player;
-import dev.kyzel.kyzen.game.tiles.FloorTile;
+import dev.kyzel.kyzen.game.level.Level;
+import dev.kyzel.kyzen.game.level.TestLevel;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Text;
 import dev.kyzel.kyzen.gfx.TextRenderer;
@@ -19,21 +19,9 @@ public class LevelScene extends Scene {
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
         // spawn a player at the middle of the screen
-        Player p = new Player(new Transform(new Vector2f(Window.get().getWidth() / 2f, Window.get().getHeight() / 2f), objectScale), 3);
-        this.addGameObject(p);
-
-        int x = 0, y = 0;
-        for (int i = 0; i < 100; i++) {
-            if (i % 10 == 0) {
-                y += (int) objectScale;
-                x = 0;
-            }
-            GameObject o1 = new FloorTile(new Transform(new Vector2f(x, y), objectScale), 2, ColorPalette.getDefaultRGB(1,1,0.5f));
-            this.addGameObject(o1);
-            x += (int) objectScale;
-        }
+        Level level = new TestLevel(this);
         text = Text.create("Current FPS: " + Math.round(Window.get().getCurrentFPS()),
-                        new Transform(new Vector2f(10, 10), objectScale / 2),
+                        new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
                 .setBackgroundColor(ColorPalette.getDefaultRGBA(1f, 0.5f, 0.5f))
                 .setFlag(TextRenderer.Flag.DOUBLED);
@@ -46,13 +34,16 @@ public class LevelScene extends Scene {
         for (GameObject ob : gameObjectList) {
             ob.update(delta);
         }
+        text.setTransform(
+                new Transform(SceneManager.getCurrentScene().getCamera().getPosition(), text.getTransform().scale))
+                .render();
         if (currentDelta > 1f) {
-            TextRenderer.cleanup();
             text.setText("Current FPS: " + Math.round(Window.get().getCurrentFPS())).render();
             currentDelta = 0f;
         }
 
         this.renderer.render();
+        TextRenderer.cleanup();
     }
 
 }
