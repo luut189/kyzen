@@ -7,6 +7,9 @@ import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.ControlHandler;
+import dev.kyzel.kyzen.input.MouseListener;
+
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class Player extends Entity {
 
@@ -32,6 +35,15 @@ public class Player extends Entity {
                 new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + 2)});
         animationComponent.addFrames(EntityState.IDLE, Direction.LEFT,
                 new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + 2).flipHorizontally()});
+
+        animationComponent.addFrames(EntityState.ATTACKING, Direction.DOWN,
+                new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + Spritesheet.PLAYER_BASE_TEXTURE_NUM)});
+        animationComponent.addFrames(EntityState.ATTACKING, Direction.UP,
+                new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + Spritesheet.PLAYER_BASE_TEXTURE_NUM + 1)});
+        animationComponent.addFrames(EntityState.ATTACKING, Direction.RIGHT,
+                new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + Spritesheet.PLAYER_BASE_TEXTURE_NUM + 2)});
+        animationComponent.addFrames(EntityState.ATTACKING, Direction.LEFT,
+                new Sprite[]{sheet.getSprite(PLAYER_SPRITE_OFFSET + Spritesheet.PLAYER_BASE_TEXTURE_NUM + 2).flipHorizontally()});
 
         animationComponent.addFrames(EntityState.MOVING, Direction.DOWN,
                 new Sprite[]{
@@ -67,6 +79,8 @@ public class Player extends Entity {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_1) && direction == Direction.NONE)
+            animationComponent.setState(EntityState.ATTACKING);
         if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
             SceneManager.getCurrentScene().getCamera().snapToPlayer(this, deltaTime);
     }

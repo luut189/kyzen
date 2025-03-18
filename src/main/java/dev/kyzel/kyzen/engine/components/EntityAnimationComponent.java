@@ -8,10 +8,11 @@ import dev.kyzel.kyzen.gfx.Sprite;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnimationComponent extends Component {
+public class EntityAnimationComponent extends Component {
 
     private final Map<Direction, Sprite[]> idleSprites = new HashMap<>();
     private final Map<Direction, Sprite[]> animationFrames = new HashMap<>();
+    private final Map<Direction, Sprite[]> attackFrames = new HashMap<>();
     private EntityState currentState;
     private float currentDelta, animationSpeed = 1f;
     private int currentFrame, maxFrames = 0;
@@ -20,8 +21,10 @@ public class AnimationComponent extends Component {
     public void addFrames(EntityState state, Direction direction, Sprite[] sprites) {
         if (state == EntityState.IDLE) {
             idleSprites.put(direction, sprites);
-        } else {
+        } else if (state == EntityState.MOVING) {
             animationFrames.put(direction, sprites);
+        } else if (state == EntityState.ATTACKING) {
+            attackFrames.put(direction, sprites);
         }
         maxFrames = Math.max(maxFrames, sprites.length);
     }
@@ -59,9 +62,11 @@ public class AnimationComponent extends Component {
     public Sprite getSprite(Direction direction) {
         if (currentState == EntityState.IDLE) {
             return idleSprites.get(direction)[0];
-        } else {
+        } else if (currentState == EntityState.MOVING) {
             Sprite[] sprites = animationFrames.get(direction);
             return sprites[currentFrame % sprites.length];
+        } else {
+            return attackFrames.get(direction)[0];
         }
     }
 

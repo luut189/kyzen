@@ -2,14 +2,14 @@ package dev.kyzel.kyzen.game.entity;
 
 import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.Transform;
-import dev.kyzel.kyzen.engine.components.AnimationComponent;
+import dev.kyzel.kyzen.engine.components.EntityAnimationComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.game.level.Level;
 
 public abstract class Entity extends GameObject {
 
     protected SpriteComponent spriteComponent;
-    protected AnimationComponent animationComponent;
+    protected EntityAnimationComponent animationComponent;
     protected Direction lastDirection, direction;
     protected float entitySpeed;
 
@@ -18,7 +18,7 @@ public abstract class Entity extends GameObject {
     public Entity(Level level, Transform transform, float zIndex) {
         super(transform, zIndex);
         this.level = level;
-        animationComponent = new AnimationComponent();
+        animationComponent = new EntityAnimationComponent();
         initAnimationFrames();
         this.addComponent(animationComponent);
     }

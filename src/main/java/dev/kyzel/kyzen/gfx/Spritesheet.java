@@ -9,7 +9,7 @@ import java.util.List;
 public class Spritesheet {
     public static final int FONT_TEXTURE_NUM = 58;
     public static final int TILE_TEXTURE_NUM = 8;
-    public static final int PLAYER_TEXTURE_NUM = 7;
+    public static final int PLAYER_BASE_TEXTURE_NUM = 7;
 
     private final List<Sprite> sprites;
 
