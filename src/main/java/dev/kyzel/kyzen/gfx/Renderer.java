@@ -30,9 +30,8 @@ public class Renderer {
     }
 
     public void add(GameObject gameObject) {
-        SpriteComponent spr = gameObject.getComponent(SpriteComponent.class);
-        if (spr != null) {
-            add(spr);
+        for (SpriteComponent spriteComponent : gameObject.getComponents(SpriteComponent.class)) {
+            add(spriteComponent);
         }
         LightComponent light = gameObject.getComponent(LightComponent.class);
         if (light != null) {
