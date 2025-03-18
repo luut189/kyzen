@@ -4,16 +4,14 @@ import dev.kyzel.kyzen.engine.Scene;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.Window;
 import dev.kyzel.kyzen.game.entity.Player;
-import dev.kyzel.kyzen.game.level.tiles.BrickTile;
-import dev.kyzel.kyzen.game.level.tiles.FloorTile;
-import dev.kyzel.kyzen.game.level.tiles.Tile;
+import dev.kyzel.kyzen.game.level.tiles.*;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import org.joml.Vector2f;
 
 public class TestLevel extends Level {
 
     public TestLevel(Scene scene) {
-        super(scene, ColorPalette.getDefaultRandomRGBA());
+        super(scene, ColorPalette.getDefaultRGBA(0.1f, 0.1f, 0.2f));
     }
 
     @Override
@@ -41,6 +39,25 @@ public class TestLevel extends Level {
                 tileList.add(tile);
             }
         }
+        for (int i = 0; i < roomSize; i++) {
+            for (int j = 0; j < roomSize; j++) {
+                Tile cur = tileList.get(j + i * roomSize);
+                if (cur instanceof BrickTile) continue;
+                boolean[] dirs = checkSurroundingTiles(j, i, roomSize, cur.getClass());
+                cur.setToBorder(dirs, theme);
+            }
+        }
+    }
+
+    private boolean[] checkSurroundingTiles(int j, int i, int roomSize, Class<? extends Tile> tileClass) {
+        Tile top = tileList.get(j + (i + 1) * roomSize);
+        Tile bottom = tileList.get(j + (i - 1) * roomSize);
+        Tile left = tileList.get(j - 1 + i * roomSize);
+        Tile right = tileList.get(j + 1 + i * roomSize);
+        return new boolean[]{!tileClass.isInstance(top),
+                             !tileClass.isInstance(bottom),
+                             !tileClass.isInstance(left),
+                             !tileClass.isInstance(right)};
     }
 
     private Tile createAndOrientTile(Transform transform, int i, int j, int x, int y, int roomSize) {
@@ -75,6 +92,9 @@ public class TestLevel extends Level {
 
             return tile;
         } else {
+            if (Math.random() > 0.8) {
+                return new LavaTile(transform, 2);
+            }
             return new FloorTile(transform, 2, theme);
         }
     }

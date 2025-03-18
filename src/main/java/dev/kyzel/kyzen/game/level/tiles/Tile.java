@@ -4,6 +4,9 @@ import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
+import org.joml.Vector4f;
+
+import static dev.kyzel.kyzen.gfx.Spritesheet.FONT_TEXTURE_NUM;
 
 public abstract class Tile extends GameObject {
 
@@ -26,6 +29,25 @@ public abstract class Tile extends GameObject {
 
     public boolean isWalkable() {
         return walkable;
+    }
+
+    // 0 - top
+    // 1 - bottom
+    // 2 - left
+    // 3 - right
+    public void setToBorder(boolean[] directions, Vector4f color) {
+        if (directions[0] && directions[2]) {
+            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8), color));
+        }
+        if (directions[0] && directions[3]) {
+            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipHorizontally(), color));
+        }
+        if (directions[1] && directions[2]) {
+            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipVertically(), color));
+        }
+        if (directions[1] && directions[3]) {
+            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipHorizontally().flipVertically(), color));
+        }
     }
 
     public Tile rotate90() {
