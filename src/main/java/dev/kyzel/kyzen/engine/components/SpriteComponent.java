@@ -58,6 +58,10 @@ public class SpriteComponent extends Component {
         return color;
     }
 
+    public Sprite getSprite() {
+        return sprite;
+    }
+
     public boolean isDirty() {
         return isDirty;
     }

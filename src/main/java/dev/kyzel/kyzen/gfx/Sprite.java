@@ -22,12 +22,21 @@ public class Sprite {
         this.texCoords = texCoords;
     }
 
+    public Sprite rotate90() {
+        Vector2f[] newTexCoords = new Vector2f[texCoords.length];
+        newTexCoords[1] = texCoords[0];
+        newTexCoords[2] = texCoords[1];
+        newTexCoords[3] = texCoords[2];
+        newTexCoords[0] = texCoords[3];
+        return new Sprite(texture, newTexCoords);
+    }
+
     public Sprite flipHorizontally() {
         Vector2f[] newTexCoords = new Vector2f[texCoords.length];
-        newTexCoords[3] = texCoords[0];
-        newTexCoords[2] = texCoords[1];
-        newTexCoords[1] = texCoords[2];
         newTexCoords[0] = texCoords[3];
+        newTexCoords[1] = texCoords[2];
+        newTexCoords[2] = texCoords[1];
+        newTexCoords[3] = texCoords[0];
         return new Sprite(texture, newTexCoords);
     }
 
