@@ -19,7 +19,11 @@ public class FloorTile extends Tile {
         super(transform, zIndex);
         int chosenFloor = WeightedRandom.getWeightedRandom(FLOOR_OFFSET_START, WEIGHTS);
         Sprite chosenSprite = sheet.getSprite(chosenFloor);
-        this.addComponent(new SpriteComponent(Math.random() > 0.5f ? chosenSprite : chosenSprite.flipHorizontally(), new Vector4f(color, 1)));
+        this.addComponent(
+                new SpriteComponent(Math.random() > 0.5f ? chosenSprite :
+                                    Math.random() > 0.2 ? chosenSprite.flipHorizontally() :
+                                                          chosenSprite.flipVertically(),
+                new Vector4f(color, 1)));
     }
 
 
