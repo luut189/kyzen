@@ -3,6 +3,7 @@ package dev.kyzel.kyzen.game.entity;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.ControlHandler;
@@ -11,8 +12,8 @@ public class Player extends Entity {
 
     private static final int PLAYER_SPRITE_OFFSET = Spritesheet.FONT_TEXTURE_NUM + Spritesheet.TILE_TEXTURE_NUM;
 
-    public Player(Transform transform, float zIndex) {
-        super(transform, zIndex);
+    public Player(Level level, Transform transform, float zIndex) {
+        super(level, transform, zIndex);
         direction = Direction.DOWN;
         lastDirection = direction;
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
@@ -61,6 +62,13 @@ public class Player extends Entity {
                 }
         );
         animationComponent.setAnimationSpeed(0.2f);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
+            SceneManager.getCurrentScene().getCamera().snapToPlayer(this, deltaTime);
     }
 
     @Override

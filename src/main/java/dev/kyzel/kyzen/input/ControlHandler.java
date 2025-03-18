@@ -9,6 +9,8 @@ public class ControlHandler {
     public static Control RIGHT = new Control(GLFW_KEY_D, GLFW_KEY_RIGHT);
     public static Control LEFT = new Control(GLFW_KEY_A, GLFW_KEY_LEFT);
 
+    public static Control SNAP_CAMERA_TO_PLAYER = new Control(GLFW_KEY_SPACE);
+
     public static Control DEBUG_ON = new Control(GLFW_KEY_Z);
     public static Control DEBUG_OFF = new Control(GLFW_KEY_X);
 

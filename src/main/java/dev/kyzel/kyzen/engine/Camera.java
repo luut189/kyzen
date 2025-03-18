@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.engine;
 
+import dev.kyzel.kyzen.game.entity.Player;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -56,6 +57,18 @@ public class Camera {
 
     public void moveCamera(float dx, float dy) {
         this.position.add(dx, dy);
+    }
+
+    public void snapToPlayer(Player player, float deltaTime) {
+        float speed = 10f;
+        float width = Window.get().getWidth();
+        float height = Window.get().getHeight();
+        float targetX = player.transform.position.x - (width / 2f) / zoom;
+        float targetY = player.transform.position.y - (height / 2f) / zoom;
+
+        // Apply interpolation
+        position.x += (targetX - position.x) * speed * deltaTime;
+        position.y += (targetY - position.y) * speed * deltaTime;
     }
 
     public void reset() {
