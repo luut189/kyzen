@@ -1,9 +1,10 @@
-package dev.kyzel.kyzen.game.tiles;
+package dev.kyzel.kyzen.game.level.tiles;
 
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 
 public abstract class AnimatedTile extends Tile {
+
     protected int numSprites, spriteOffset, currentIndex;
     protected int[] spriteIndices;
     protected float currentDelta, changeInterval = 1.4f;
@@ -17,6 +18,7 @@ public abstract class AnimatedTile extends Tile {
         for (int i = 0; i < numSprites; i++) {
             spriteIndices[i] = spriteOffset + i;
         }
+        spriteIndex = spriteIndices[currentIndex];
     }
 
     @Override
@@ -25,8 +27,9 @@ public abstract class AnimatedTile extends Tile {
         currentDelta += deltaTime;
         if (currentDelta >= changeInterval) {
             currentIndex = (int) Math.floor(Math.random() * numSprites);
+            spriteIndex = spriteIndices[currentIndex];
             currentDelta = 0.0f;
         }
-        this.getComponent(SpriteComponent.class).setSprite(sheet.getSprite(spriteIndices[currentIndex]));
+        this.getComponent(SpriteComponent.class).setSprite(sheet.getSprite(spriteIndex));
     }
 }

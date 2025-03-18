@@ -1,4 +1,4 @@
-package dev.kyzel.kyzen.game.tiles;
+package dev.kyzel.kyzen.game.level.tiles;
 
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.gfx.ColorPalette;
