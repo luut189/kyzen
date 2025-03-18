@@ -47,10 +47,10 @@ public abstract class Level {
             float tileWidth = tileTransform.scale.x;
             float tileHeight = tileTransform.scale.y;
             if (
-                    entityX < tileX + tileWidth &&
-                    entityX + entityWidth > tileX &&
+                    entityX < tileX + tileWidth / 2 &&
+                    entityX + entityWidth / 2 > tileX &&
                     entityY < tileY + tileHeight &&
-                    entityY + entityHeight > tileY
+                    entityY + entityHeight / 2 > tileY
             ) {
                 return true;
             }
