@@ -16,12 +16,11 @@ public class TestLevel extends Level {
     @Override
     protected void addEntities() {
         Vector2f position = new Vector2f();
-        Tile cur = getTile((int) position.x, (int) position.y);
-        while (cur != null) {
-            if (cur.isWalkable()) break;
+        Tile cur = getTile((int) Math.floor(position.x), (int) Math.floor(position.y));
+        while (!cur.isWalkable()) {
             position.x = (float) Math.random() * width;
             position.y = (float) Math.random() * height;
-            cur = getTile((int) position.x, (int) position.y);
+            cur = getTile(Math.round(position.x), Math.round(position.y));
         }
         position.x *= scene.getObjectScale();
         position.y *= scene.getObjectScale();
