@@ -4,7 +4,7 @@ import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Spritesheet;
-import dev.kyzel.kyzen.utils.WeightedRandom;
+import dev.kyzel.kyzen.utils.ExtendedMath;
 import org.joml.Vector4f;
 
 public class SandTile extends Tile {
@@ -15,7 +15,7 @@ public class SandTile extends Tile {
     public SandTile(Transform transform, float zIndex) {
         super(transform, zIndex);
 
-        spriteIndex = WeightedRandom.getWeightedRandom(SAND_OFFSET_START, WEIGHTS);
+        spriteIndex = ExtendedMath.getWeightedRandom(SAND_OFFSET_START, WEIGHTS);
         Vector4f color = ColorPalette.getDefaultRGBA(0.984f, 0.725f, 0.329f);
 
         this.addComponent(new SpriteComponent(sheet.getSprite(spriteIndex), color));

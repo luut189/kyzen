@@ -3,7 +3,7 @@ package dev.kyzel.kyzen.game.level.tiles;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Spritesheet;
-import dev.kyzel.kyzen.utils.WeightedRandom;
+import dev.kyzel.kyzen.utils.ExtendedMath;
 import org.joml.Vector4f;
 
 public abstract class LiquidTile extends AnimatedTile {
@@ -17,7 +17,7 @@ public abstract class LiquidTile extends AnimatedTile {
     public LiquidTile(Transform transform, float zIndex, Vector4f color) {
         super(transform, zIndex, NUM_SPRITE, LIQUID_OFFSET);
         this.color = color;
-        int chosenIndex = WeightedRandom.getWeightedRandom(LIQUID_OFFSET, WEIGHTS);
+        int chosenIndex = ExtendedMath.getWeightedRandom(LIQUID_OFFSET, WEIGHTS);
         this.addComponent(new SpriteComponent(sheet.getSprite(chosenIndex), color));
     }
 

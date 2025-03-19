@@ -4,7 +4,7 @@ import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
-import dev.kyzel.kyzen.utils.WeightedRandom;
+import dev.kyzel.kyzen.utils.ExtendedMath;
 import org.joml.Vector4f;
 
 public class FloorTile extends Tile {
@@ -16,7 +16,7 @@ public class FloorTile extends Tile {
 
     public FloorTile(Transform transform, float zIndex, Vector4f color) {
         super(transform, zIndex);
-        spriteIndex = WeightedRandom.getWeightedRandom(FLOOR_OFFSET_START, WEIGHTS);
+        spriteIndex = ExtendedMath.getWeightedRandom(FLOOR_OFFSET_START, WEIGHTS);
         Sprite chosenSprite = sheet.getSprite(spriteIndex);
         this.addComponent(
                 new SpriteComponent(Math.random() > 0.5f ? chosenSprite :
