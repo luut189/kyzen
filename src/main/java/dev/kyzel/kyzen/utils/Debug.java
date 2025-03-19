@@ -1,5 +1,8 @@
 package dev.kyzel.kyzen.utils;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 public class Debug {
     private static boolean isDebug = false;
     private static float currentDelta = 0f;
@@ -23,7 +26,7 @@ public class Debug {
         currentDelta += deltaTime;
         float printInterval = 1f;
         if (isDebug && currentDelta > printInterval) {
-            System.out.println("[DEBUG]: " + message);
+            log(message);
             currentDelta = 0;
         }
     }
@@ -33,8 +36,9 @@ public class Debug {
     }
 
     public static void log(String message) {
+        LocalTime date = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
         if (isDebug) {
-            System.out.println("[DEBUG]: " + message);
+            System.out.println("[" + date + "]" + " [DEBUG]: " + message);
         }
     }
 }
