@@ -13,27 +13,26 @@ import java.util.List;
 
 public class ParticleManager {
 
+    private static final int MAX_PARTICLES = 100;
+    private static final float PARTICLE_SIZE = 5f;
+
     private static final List<Particle> particlesToAdd = new ArrayList<>();
-    private static final float particleSize = 5f;
+
+    public static void addAllParticles() {
+        for (Particle particle : particlesToAdd) {
+            SceneManager.getCurrentScene().addGameObject(particle);
+        }
+        particlesToAdd.clear();
+    }
 
     public static void createParticles(int count, Entity creator, Vector4f color, Direction direction) {
+        if (particlesToAdd.size() > MAX_PARTICLES) return;
         Vector2f velocity = new Vector2f(0, 0);
         Transform transform = creator.getTransform().copy();
-        Vector2f position = transform.position;
-        float adjustment = transform.scale.y * 0.3f;
-        position.y += adjustment;
-        if (direction == Direction.UP) {
-            position.y += adjustment;
-        } else if (direction == Direction.RIGHT) {
-            position.x += transform.scale.x;
-        }
+        Vector2f position = getPosition(direction, transform);
 
-        if (direction == Direction.DOWN) {
-            position.x += transform.scale.x * 0.75f;
-        }
-
-        float variation = 0.2f;
-        float offset = (float) Math.random() * variation * 2 - variation;
+        float spread = 0.2f;
+        float offset = (float) Math.random() * spread * 2 - spread;
         float speed = (float) Math.random() * 100f + 50f;
 
         velocity = switch (direction) {
@@ -43,16 +42,21 @@ public class ParticleManager {
             case RIGHT -> new Vector2f(1, offset).mul(speed);
             default -> velocity;
         };
+
         for (int i = 0; i < count; i++) {
             position = ExtendedMath.getRandomPointsInCircle(position, 5);
             particlesToAdd.add(new Particle(new Transform(position, PARTICLE_SIZE), creator.getzIndex(), color, velocity));
         }
     }
 
-    public static void addAllParticles() {
-        for (Particle particle : particlesToAdd) {
-            SceneManager.getCurrentScene().addGameObject(particle);
-        }
-        particlesToAdd.clear();
+    private static Vector2f getPosition(Direction direction, Transform transform) {
+        Vector2f scale = transform.scale;
+        return switch (direction) {
+            case UP -> new Vector2f(transform.position.x, transform.position.y + scale.y * 1.3f);
+            case DOWN -> new Vector2f(transform.position.x + scale.x * 0.8f, transform.position.y - scale.y * 0.3f);
+            case LEFT -> new Vector2f(transform.position.x - scale.x * 0.3f, transform.position.y + scale.y * 0.3f);
+            case RIGHT -> new Vector2f(transform.position.x + scale.x * 1.3f, transform.position.y + scale.y * 0.3f);
+            default -> transform.position;
+        };
     }
 }
