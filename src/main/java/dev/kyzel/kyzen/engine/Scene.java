@@ -1,6 +1,7 @@
 package dev.kyzel.kyzen.engine;
 
 import dev.kyzel.kyzen.engine.components.LifetimeComponent;
+import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.Renderer;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.MouseListener;
@@ -18,6 +19,7 @@ public abstract class Scene {
     protected final List<GameObject> gameObjectList = new ArrayList<>();
     protected final Renderer renderer = new Renderer();
     protected float objectScale = 64f;
+    protected Level currentLevel;
 
     private float currentMaxZIndex = 0;
     private boolean isRunning = false;
@@ -94,6 +96,10 @@ public abstract class Scene {
             gameObject.getTransform().scale.x *= scale;
             gameObject.getTransform().scale.y *= scale;
         }
+    }
+
+    public Level getCurrentLevel() {
+        return currentLevel;
     }
 
     public Spritesheet getSpritesheet() {
