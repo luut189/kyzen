@@ -19,6 +19,6 @@ public class SandTile extends Tile {
         Vector4f color = ColorPalette.getDefaultRGBA(0.984f, 0.725f, 0.329f);
 
         this.addComponent(new SpriteComponent(sheet.getSprite(spriteIndex), color));
-        walkable = true;
+        isWalkable = true;
     }
 }

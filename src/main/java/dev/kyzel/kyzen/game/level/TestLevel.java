@@ -42,7 +42,7 @@ public class TestLevel extends Level {
             for (int j = 0; j < width; j++) {
                 Tile cur = tileList.get(j + i * width);
                 if (cur instanceof BrickTile) continue;
-                boolean[] dirs = checkSurroundingTiles(j, i, cur.getClass());
+                boolean[] dirs = checkDifferentSurroundingTiles(j, i, cur.getClass());
                 cur.setToBorder(dirs, theme);
             }
         }

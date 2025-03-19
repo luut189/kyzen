@@ -58,10 +58,10 @@ public class LightRenderer {
         glBlendFunc(GL_ONE, GL_ONE);
 
         for (LightComponent light : lights) {
-            GameObject entity = light.gameObject;
-            if (entity == null) continue;
+            GameObject gameObject = light.gameObject;
+            if (gameObject == null) continue;
 
-            Transform transform = entity.getTransform();
+            Transform transform = gameObject.getTransform();
             if (transform == null) continue;
 
             float objectWidth = transform.scale.x;

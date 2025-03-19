@@ -15,7 +15,6 @@ public abstract class Level {
     protected Vector4f theme;
     protected List<Entity> entityList;
     protected List<Tile> tileList;
-    protected List<Integer> lightMap;
 
     protected int x, y;
     protected final int width, height;
@@ -25,7 +24,6 @@ public abstract class Level {
         this.theme = theme;
         entityList = new ArrayList<>();
         tileList = new ArrayList<>();
-        lightMap = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.width = width;
@@ -33,8 +31,21 @@ public abstract class Level {
         generateLevel();
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     protected boolean isInBounds(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    public Tile getTile(int x, int y) {
+        if (!isInBounds(x, y)) return null;
+        return tileList.get(x + y * width);
     }
 
     protected abstract void addEntities();
@@ -46,7 +57,7 @@ public abstract class Level {
         addEntities();
     }
 
-    protected boolean[] checkSurroundingTiles(int j, int i, Class<? extends Tile> tileClass) {
+    protected boolean[] checkDifferentSurroundingTiles(int j, int i, Class<? extends Tile> tileClass) {
         Tile top = isInBounds(j, i + 1) ? tileList.get(j + (i + 1) * width) : null;
         Tile bottom = isInBounds(j, i - 1) ? tileList.get(j + (i - 1) * width) : null;
         Tile left = isInBounds(j - 1, i) ? tileList.get(j - 1 + i * width) : null;

@@ -23,6 +23,6 @@ public class FloorTile extends Tile {
                                     Math.random() > 0.2 ? chosenSprite.flipHorizontally() :
                                                           chosenSprite.flipVertically(),
                 color));
-        walkable = true;
+        isWalkable = true;
     }
 }

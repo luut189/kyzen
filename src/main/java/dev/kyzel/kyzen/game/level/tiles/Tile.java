@@ -12,7 +12,7 @@ public abstract class Tile extends GameObject {
 
     protected int spriteIndex;
     protected Sprite sprite;
-    protected boolean walkable = false;
+    protected boolean isWalkable = false;
 
     public Tile(Transform transform, float zIndex) {
         super(transform, zIndex);
@@ -28,7 +28,7 @@ public abstract class Tile extends GameObject {
     }
 
     public boolean isWalkable() {
-        return walkable;
+        return isWalkable;
     }
 
     // 0 - top
