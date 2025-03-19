@@ -44,8 +44,8 @@ public class ParticleManager {
             default -> velocity;
         };
         for (int i = 0; i < count; i++) {
-            position = ExtendedMath.getRandomPointInCircle(position, 5);
-            particlesToAdd.add(new Particle(new Transform(position, particleSize), creator.getzIndex() - 0.01f, color, velocity));
+            position = ExtendedMath.getRandomPointsInCircle(position, 5);
+            particlesToAdd.add(new Particle(new Transform(position, PARTICLE_SIZE), creator.getzIndex(), color, velocity));
         }
     }
 

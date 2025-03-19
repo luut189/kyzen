@@ -23,10 +23,14 @@ public class ExtendedMath {
         return start;
     }
 
-    public static Vector2f getRandomPointInCircle(Vector2f center, float r) {
+    public static Vector2f getRandomPointsInCircle(float radius) {
+        return getRandomPointsInCircle(new Vector2f(), radius);
+    }
+
+    public static Vector2f getRandomPointsInCircle(Vector2f center, float radius) {
         float angle = (float) (Math.random() * 2 * Math.PI);
 
-        float radius = (float) Math.sqrt(Math.random()) * r;  // sqrt ensures uniform distribution
+        radius = (float) Math.sqrt(Math.random()) * radius;
 
         float x = center.x + radius * (float) Math.cos(angle);
         float y = center.y + radius * (float) Math.sin(angle);
