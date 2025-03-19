@@ -16,10 +16,10 @@ public abstract class Level {
     protected List<Entity> entityList;
     protected List<Tile> tileList;
 
-    protected int x, y;
+    protected float x, y;
     protected final int width, height;
 
-    public Level(Scene scene, Vector4f theme, int x, int y, int width, int height) {
+    public Level(Scene scene, Vector4f theme, float x, float y, int width, int height) {
         this.scene = scene;
         this.theme = theme;
         entityList = new ArrayList<>();
