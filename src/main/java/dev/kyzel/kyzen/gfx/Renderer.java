@@ -62,9 +62,8 @@ public class Renderer {
     }
 
     public void remove(GameObject gameObject) {
-        SpriteComponent spr = gameObject.getComponent(SpriteComponent.class);
-        if (spr != null) {
-            remove(spr);
+        for (SpriteComponent spriteComponent : gameObject.getComponents(SpriteComponent.class)) {
+            remove(spriteComponent);
         }
         LightComponent light = gameObject.getComponent(LightComponent.class);
         if (light != null) {

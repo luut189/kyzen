@@ -3,7 +3,9 @@ package dev.kyzel.kyzen.game.entity;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.ParticleManager;
 import dev.kyzel.kyzen.game.level.Level;
+import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.ControlHandler;
@@ -79,8 +81,10 @@ public class Player extends Entity {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_1) && direction == Direction.NONE)
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_1) && direction == Direction.NONE) {
             animationComponent.setState(EntityState.ATTACKING);
+            ParticleManager.createParticles(1, this, ColorPalette.getDefaultRandomRGBA(), lastDirection);
+        }
         if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
             SceneManager.getCurrentScene().getCamera().snapToPlayer(this, deltaTime);
     }

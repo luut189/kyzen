@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.engine;
 
+import dev.kyzel.kyzen.game.ParticleManager;
 import dev.kyzel.kyzen.game.level.TestLevel;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Text;
@@ -39,6 +40,7 @@ public class LevelScene extends Scene {
             text.setText("Current FPS: " + Math.round(Window.get().getCurrentFPS())).render();
             currentDelta = 0f;
         }
+        ParticleManager.addAllParticles();
 
         this.renderer.render();
         TextRenderer.cleanup();
