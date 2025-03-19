@@ -1,6 +1,5 @@
 package dev.kyzel.kyzen.engine;
 
-import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.game.level.TestLevel;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Text;
@@ -18,8 +17,7 @@ public class LevelScene extends Scene {
         this.camera = new Camera(new Vector2f());
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-        // spawn a player at the middle of the screen
-        Level level = new TestLevel(this);
+        new TestLevel(this, 0, 0);
         text = Text.create("Current FPS: " + Math.round(Window.get().getCurrentFPS()),
                         new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
@@ -35,7 +33,7 @@ public class LevelScene extends Scene {
             ob.update(delta);
         }
         text.setTransform(
-                new Transform(SceneManager.getCurrentScene().getCamera().getPosition(), text.getTransform().scale))
+                        new Transform(SceneManager.getCurrentScene().getCamera().getPosition(), text.getTransform().scale))
                 .render();
         if (currentDelta > 1f) {
             text.setText("Current FPS: " + Math.round(Window.get().getCurrentFPS())).render();

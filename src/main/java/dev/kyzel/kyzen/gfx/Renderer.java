@@ -96,10 +96,10 @@ public class Renderer {
         for (RenderBatch renderBatch : batches) {
             blendFramebuffer(renderBatch.getFramebuffer(), compositeBuffer);
         }
+        LightRenderer.getInstance().renderToFramebuffer(compositeBuffer);
         for (int i = 0; i < TextRenderer.getRenderBatches().size(); i++) {
             blendFramebuffer(TextRenderer.getFramebuffer(i), compositeBuffer);
         }
-        LightRenderer.getInstance().renderToFramebuffer(compositeBuffer);
         compositeBuffer.unbind();
 
         // final render to screen
