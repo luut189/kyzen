@@ -36,9 +36,14 @@ public class Debug {
     }
 
     public static void log(String message) {
-        LocalTime date = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
         if (isDebug) {
-            System.out.println("[" + date + "]" + " [DEBUG]: " + message);
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            StackTraceElement caller = stackTrace.length > 3 ? stackTrace[3] : stackTrace[2];
+
+            LocalTime date = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
+            String callerInfo = caller.getClassName() + "." + caller.getMethodName() + ":" + caller.getLineNumber();
+
+            System.out.println("[" + date + "] [DEBUG] " + callerInfo + " " + message);
         }
     }
 }
