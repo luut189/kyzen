@@ -61,7 +61,7 @@ public class TextRenderer {
         for (char c : text.toUpperCase().toCharArray()) {
             charCount++;
             if (c == ' ') {
-                position.x += baseTransform.scale.x;
+                position.x += baseTransform.scale.x * 0.5f;
                 continue;
             }
             if (c == '\n') {

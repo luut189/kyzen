@@ -19,7 +19,7 @@ public class LevelScene extends Scene {
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
         currentLevel = new TestLevel(this, 0, 0);
-        debugText = TextRenderer.create("Current FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
+        debugText = TextRenderer.create("FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
                         new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
                 .setFlag(TextRenderer.Flag.DOUBLED);
@@ -35,7 +35,7 @@ public class LevelScene extends Scene {
         Vector2f position = new Vector2f(this.camera.getPosition()).add(new Vector2f(0, debugText.getTransform().scale.y));
         debugText.setTransform(new Transform(position, debugText.getTransform().scale));
         if (currentDelta > 1f) {
-            debugText.setText("Current FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick());
+            debugText.setText("FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick());
             currentDelta = 0f;
         }
         ParticleManager.addAllParticles();
