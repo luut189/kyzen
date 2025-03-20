@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.gfx;
 
+import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.Window;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.engine.SceneManager;
@@ -203,10 +204,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
 
+            Transform transform = sprite.getOwner().getTransform();
+
             vertices[offset] =
-                    sprite.gameObject.getTransform().position.x + (xAdd * sprite.gameObject.getTransform().scale.x);
+                    transform.position.x + (xAdd * transform.scale.x);
             vertices[offset + 1] =
-                    sprite.gameObject.getTransform().position.y + (yAdd * sprite.gameObject.getTransform().scale.y);
+                    transform.position.y + (yAdd * transform.scale.y);
 
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;

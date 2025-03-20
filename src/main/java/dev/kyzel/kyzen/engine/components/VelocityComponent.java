@@ -19,8 +19,8 @@ public class VelocityComponent extends Component {
 
     @Override
     public void update(float deltaTime) {
-        if (gameObject == null) return;
-        Transform transform = gameObject.getTransform();
+        if (owner == null) return;
+        Transform transform = owner.getTransform();
         transform.position.y += velocity.y * deltaTime;
         transform.position.x += velocity.x * deltaTime;
     }

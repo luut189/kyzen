@@ -58,7 +58,7 @@ public class LightRenderer {
         glBlendFunc(GL_ONE, GL_ONE);
 
         for (LightComponent light : lights) {
-            GameObject gameObject = light.gameObject;
+            GameObject gameObject = light.getOwner();
             if (gameObject == null) continue;
 
             Transform transform = gameObject.getTransform();

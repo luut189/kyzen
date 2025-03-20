@@ -40,7 +40,7 @@ public class GameObject {
 
     public GameObject addComponent(Component component) {
         componentMap.computeIfAbsent(component.getClass(), k -> new ArrayList<>()).add(component);
-        component.gameObject = this;
+        component.owner = this;
         return this;
     }
 
@@ -48,7 +48,7 @@ public class GameObject {
         List<Component> components = componentMap.get(componentClass);
         if (components != null && !components.isEmpty()) {
             Component removedComponent = components.removeFirst();
-            removedComponent.gameObject = null;
+            removedComponent.owner = null;
             if (components.isEmpty()) {
                 componentMap.remove(componentClass);
             }
@@ -60,7 +60,7 @@ public class GameObject {
         List<Component> components = componentMap.remove(componentClass);
         if (components != null) {
             for (Component component : components) {
-                component.gameObject = null;
+                component.owner = null;
             }
         }
         return this;
@@ -69,7 +69,7 @@ public class GameObject {
     public void removeAllComponents() {
         for (List<Component> components : componentMap.values()) {
             for (Component component : components) {
-                component.gameObject = null;
+                component.owner = null;
             }
         }
         componentMap.clear();

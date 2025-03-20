@@ -29,20 +29,11 @@ public class Renderer {
         compositeBuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
     }
 
-    public void add(GameObject gameObject) {
-        for (SpriteComponent spriteComponent : gameObject.getComponents(SpriteComponent.class)) {
-            add(spriteComponent);
-        }
-        LightComponent light = gameObject.getComponent(LightComponent.class);
-        if (light != null) {
-            LightRenderer.getInstance().addLight(light);
-        }
-    }
-
-    private void add(SpriteComponent sprite) {
+    public static void addSpriteToBatches(SpriteComponent sprite, List<RenderBatch> batches) {
         boolean added = false;
+        float spriteZIndex = sprite.getOwner().getzIndex();
         for (RenderBatch renderBatch : batches) {
-            if (renderBatch.hasRoom() && renderBatch.getzIndex() == sprite.gameObject.getzIndex()) {
+            if (renderBatch.hasRoom() && renderBatch.getzIndex() == spriteZIndex) {
                 Texture texture = sprite.getTexture();
                 if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTextureRoom())) {
                     renderBatch.addSprite(sprite);
@@ -53,11 +44,21 @@ public class Renderer {
         }
 
         if (!added) {
-            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, sprite.gameObject.getzIndex());
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, spriteZIndex);
             newBatch.start();
             batches.add(newBatch);
             newBatch.addSprite(sprite);
             Collections.sort(batches);
+        }
+    }
+
+    public void add(GameObject gameObject) {
+        for (SpriteComponent spriteComponent : gameObject.getComponents(SpriteComponent.class)) {
+            addSpriteToBatches(spriteComponent, batches);
+        }
+        LightComponent light = gameObject.getComponent(LightComponent.class);
+        if (light != null) {
+            LightRenderer.getInstance().addLight(light);
         }
     }
 
