@@ -10,10 +10,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static dev.kyzel.kyzen.gfx.Renderer.MAX_BATCH_SIZE;
 
 public class TextRenderer {
 
@@ -144,24 +141,7 @@ public class TextRenderer {
         GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
         if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
         objectBatch.add(gameObject);
-        boolean added = false;
-        for (RenderBatch renderBatch : renderBatches) {
-            if (renderBatch.hasRoom() && renderBatch.getzIndex() == zIndex) {
-                Texture texture = spriteComponent.getTexture();
-                if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTextureRoom())) {
-                    renderBatch.addSprite(spriteComponent);
-                    added = true;
-                    break;
-                }
-            }
-        }
-        if (!added) {
-            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, zIndex);
-            newBatch.start();
-            renderBatches.add(newBatch);
-            newBatch.addSprite(spriteComponent);
-            Collections.sort(renderBatches);
-        }
+        Renderer.addSpriteToBatches(spriteComponent, renderBatches);
     }
 
 }

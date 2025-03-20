@@ -12,6 +12,15 @@ public class Text {
     private float lifetime;
     private TextRenderer.Flag flag;
 
+    private Text(String text, Transform transform, Vector4f color) {
+        this.text = text;
+        this.transform = transform;
+        this.color = color;
+        this.backgroundColor = null;
+        this.lifetime = -1;
+        this.flag = TextRenderer.Flag.NONE;
+    }
+
     public static Text create(String text, Transform transform, Vector4f color) {
         return new Text(text, transform, color);
     }
@@ -38,15 +47,6 @@ public class Text {
 
     public String getText() {
         return text;
-    }
-
-    private Text(String text, Transform transform, Vector4f color) {
-        this.text = text;
-        this.transform = transform;
-        this.color = color;
-        this.backgroundColor = null;
-        this.lifetime = -1;
-        this.flag = TextRenderer.Flag.NONE;
     }
 
     public Text setText(String text) {
