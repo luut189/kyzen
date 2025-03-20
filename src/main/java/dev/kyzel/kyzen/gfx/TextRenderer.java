@@ -24,10 +24,19 @@ public class TextRenderer {
     public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
     private static final List<GameObject> objectBatch = new ArrayList<>();
+    private static final List<Text> textToRender = new ArrayList<>();
     private static final List<RenderBatch> renderBatches = new ArrayList<>();
 
     public static Text create(String text, Transform transform, Vector4f color) {
-        return Text.create(text, transform, color);
+        Text newText = Text.create(text, transform, color);
+        textToRender.add(newText);
+        return newText;
+    }
+
+    public static void render() {
+        for (Text text : textToRender) {
+            text.render();
+        }
     }
 
     public static void renderText(Text text) {

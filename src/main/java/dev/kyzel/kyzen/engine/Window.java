@@ -15,13 +15,14 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-
 public class Window {
     private int width, height, vpX, vpY;
     private final String title;
     private long glfwWindow;
     private float targetAspectRatio = 16f / 9f;
-    private float currentFPS = 0f;
+    private int currentFPS = 0;
+    private int currentTick = 0;
+    private int targetFPS;
 
     private static Window window = null;
 
@@ -68,8 +69,12 @@ public class Window {
         return vpY;
     }
 
-    public float getCurrentFPS() {
+    public int getCurrentFPS() {
         return currentFPS;
+    }
+
+    public int getCurrentTick() {
+        return currentTick;
     }
 
     public void run() {
@@ -114,6 +119,10 @@ public class Window {
         // bindings available for use.
         GL.createCapabilities();
 
+        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        assert vidMode != null : "Failed to get primary monitor's mode";
+        targetFPS = vidMode.refreshRate();
+
         glfwSetFramebufferSizeCallback(glfwWindow, this::windowSizeCallback);
 
         int[] targetWidth = new int[1];
@@ -130,31 +139,63 @@ public class Window {
     }
 
     public void loop() {
-        float beginTime = (float) glfwGetTime();
-        float endTime;
-        float deltaTime = -1.0f;
+        int tickPerSecond = targetFPS;
+        double updateInterval = 1000000000.0 / tickPerSecond;
+        double frameInterval = 1000000000.0 / targetFPS;
+        double delta = 0;
+        long lastUpdateTime = System.nanoTime();
+        long lastFrameTime = System.nanoTime();
+
+        long timer = System.currentTimeMillis();
+        int frameCount = 0;
+        int tickCount = 0;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
+            long now = System.nanoTime();
+            delta += (now - lastUpdateTime) / updateInterval;
+            lastUpdateTime = now;
+
             glfwPollEvents();
 
-            if (deltaTime > 0.0f) {
-                if (ControlHandler.DEBUG_ON.pressed()) {
-                    Debug.setDebug(true);
-                } else if (ControlHandler.DEBUG_OFF.pressed()) {
-                    Debug.setDebug(false);
-                }
-                currentFPS = 1f / deltaTime;
-                Debug.log("FPS: " + currentFPS, deltaTime);
-                SceneManager.updateScene(deltaTime);
-                MouseListener.endFrame();
+            // preventing spiral of death
+            if (delta > 5) delta = 5;
+
+            // handle debug toggle
+            if (ControlHandler.DEBUG_ON.pressed()) {
+                Debug.setDebug(true);
+            } else if (ControlHandler.DEBUG_OFF.pressed()) {
+                Debug.setDebug(false);
             }
 
-            glfwSwapBuffers(glfwWindow);
+            // updating the scene with tick per second
+            while (delta >= 1) {
+                float deltaTime = 1.0f / tickPerSecond;
+                SceneManager.updateScene(deltaTime);
+                delta--;
+                tickCount++;
+            }
 
-            endTime = (float) glfwGetTime();
-            deltaTime = endTime - beginTime;
-            beginTime = endTime;
+            // rendering the scene with frame per second
+            if (now - lastFrameTime >= frameInterval) {
+                SceneManager.renderScene();
+                frameCount++;
+                lastFrameTime = now;
+
+                MouseListener.endFrame();
+                glfwSwapBuffers(glfwWindow);
+            }
+
+            // updating the current meters (FPS, TPS)
+            if (System.currentTimeMillis() - timer >= 1000) {
+                currentTick = tickCount;
+                currentFPS = frameCount;
+                Debug.log("FPS: " + frameCount + " | TPS: " + tickCount);
+                frameCount = 0;
+                tickCount = 0;
+                timer += 1000;
+            }
         }
+
     }
 
     private void windowSizeCallback(long window, int screenWidth, int screenHeight) {

@@ -11,7 +11,7 @@ import org.joml.Vector2f;
 public class LevelScene extends Scene {
 
     private float currentDelta;
-    Text text;
+    Text debugText;
 
     @Override
     public void init() {
@@ -19,10 +19,9 @@ public class LevelScene extends Scene {
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
         currentLevel = new TestLevel(this, 0, 0);
-        text = Text.create("Current FPS: " + Math.round(Window.get().getCurrentFPS()),
+        debugText = TextRenderer.create("Current FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
                         new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
-                .setBackgroundColor(ColorPalette.getDefaultRGBA(1f, 0.5f, 0.5f))
                 .setFlag(TextRenderer.Flag.DOUBLED);
     }
 
@@ -33,17 +32,13 @@ public class LevelScene extends Scene {
         for (GameObject ob : gameObjectList) {
             ob.update(delta);
         }
-        text.setTransform(
-                        new Transform(SceneManager.getCurrentScene().getCamera().getPosition(), text.getTransform().scale))
-                .render();
+        Vector2f position = new Vector2f(this.camera.getPosition()).add(new Vector2f(0, debugText.getTransform().scale.y));
+        debugText.setTransform(new Transform(position, debugText.getTransform().scale));
         if (currentDelta > 1f) {
-            text.setText("Current FPS: " + Math.round(Window.get().getCurrentFPS())).render();
+            debugText.setText("Current FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick());
             currentDelta = 0f;
         }
         ParticleManager.addAllParticles();
-
-        this.renderer.render();
-        TextRenderer.cleanup();
     }
 
 }
