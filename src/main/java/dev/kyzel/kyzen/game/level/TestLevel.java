@@ -17,7 +17,7 @@ public class TestLevel extends Level {
     protected void addEntities() {
         Vector2f position = new Vector2f();
         Tile cur = getTile((int) Math.floor(position.x), (int) Math.floor(position.y));
-        while (!cur.isWalkable()) {
+        while (cur == null || !cur.isWalkable()) {
             position.x = (float) Math.random() * width;
             position.y = (float) Math.random() * height;
             cur = getTile(Math.round(position.x), Math.round(position.y));
