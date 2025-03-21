@@ -11,6 +11,7 @@ import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.ControlHandler;
 import dev.kyzel.kyzen.input.MouseListener;
+import dev.kyzel.kyzen.utils.ExtendedMath;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
@@ -25,7 +26,7 @@ public class Player extends Entity {
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
 
         spriteComponent = new SpriteComponent(sheet.getSprite(PLAYER_SPRITE_OFFSET));
-        this.addComponent(new LightComponent(500, ColorPalette.getDefaultRGB(1,1,1), 0.1f));
+        this.addComponent(new LightComponent(500, ExtendedMath.toVector3f(level.getTheme()), 0.4f));
         this.addComponent(spriteComponent);
     }
 

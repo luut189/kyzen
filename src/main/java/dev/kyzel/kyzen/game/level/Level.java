@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class Level {
 
     protected Scene scene;
-    protected Vector4f theme;
+    protected final Vector4f theme;
     protected List<Entity> entityList;
     protected List<Tile> tileList;
 
@@ -52,6 +52,10 @@ public abstract class Level {
 
     public boolean hasDarkness() {
         return hasDarkness;
+    }
+
+    public Vector4f getTheme() {
+        return theme;
     }
 
     protected abstract void addEntities();
