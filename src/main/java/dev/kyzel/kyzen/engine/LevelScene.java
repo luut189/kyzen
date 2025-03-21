@@ -22,7 +22,8 @@ public class LevelScene extends Scene {
         debugText = TextRenderer.create("FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
                         new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
-                .setFlag(TextRenderer.Flag.DOUBLED);
+                .setFlag(TextRenderer.Flag.DOUBLED)
+                .setFixedPosition(true);
     }
 
     @Override
@@ -32,8 +33,6 @@ public class LevelScene extends Scene {
         for (GameObject ob : gameObjectList) {
             ob.update(delta);
         }
-        Vector2f position = new Vector2f(this.camera.getPosition()).add(new Vector2f(0, debugText.getTransform().scale.y));
-        debugText.setTransform(new Transform(position, debugText.getTransform().scale));
         if (currentDelta > 1f) {
             debugText.setText("FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick());
             currentDelta = 0f;
