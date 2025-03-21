@@ -15,7 +15,7 @@ public class Particle extends GameObject {
         super(transform, zIndex);
         this.addComponent(new SpriteComponent(color));
         this.addComponent(new VelocityComponent(velocity));
-        this.addComponent(new LightComponent(transform.scale.x, ExtendedMath.toVector3f(color), 1));
+        this.addComponent(new LightComponent(transform.scale.x * 2f, ExtendedMath.toVector3f(color), 0.4f));
         this.addComponent(new LifetimeComponent((float) Math.random()));
     }
 }
