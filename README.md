@@ -15,7 +15,7 @@ The engine supports basic components like rendering, scenes, input handling, ass
 
 ## Requirements
 
-- Java 17+ (or the required version for LWJGL)
+- Java 21+ (or the required version for LWJGL)
 - Maven (If you want to use Gradle, you have to reconfigure the project's dependencies yourself)
 
 ## How to use (To be added)
