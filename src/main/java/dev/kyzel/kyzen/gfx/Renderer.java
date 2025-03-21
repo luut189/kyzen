@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.gfx;
 
+import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Window;
 import dev.kyzel.kyzen.engine.components.LightComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
@@ -96,7 +97,10 @@ public class Renderer {
         for (RenderBatch renderBatch : batches) {
             blendFramebuffer(renderBatch.getFramebuffer(), compositeBuffer);
         }
+
+        LightRenderer.getInstance().setHasDarkness(SceneManager.getCurrentScene().getCurrentLevel().hasDarkness());
         LightRenderer.getInstance().renderToFramebuffer(compositeBuffer);
+
         for (int i = 0; i < TextRenderer.getRenderBatches().size(); i++) {
             blendFramebuffer(TextRenderer.getFramebuffer(i), compositeBuffer);
         }

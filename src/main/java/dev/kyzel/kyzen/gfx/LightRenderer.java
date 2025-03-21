@@ -19,15 +19,17 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class LightRenderer {
     private static LightRenderer instance;
     private final List<LightComponent> lights;
-    private final Shader lightShader, blurShader, postProcessShader;
+    private final Shader lightShader, blurShader, postProcessShader, shadowMaskShader;
     private final Framebuffer lightFramebuffer;
     private final Framebuffer[] blurFramebuffers = new Framebuffer[2];
+    private boolean hasDarkness = false;
 
     private LightRenderer() {
         this.lights = new ArrayList<>();
         lightShader = AssetManager.getShader("assets/shaders/light.glsl");
         blurShader = AssetManager.getShader("assets/shaders/blur.glsl");
         postProcessShader = AssetManager.getShader("assets/shaders/post-process.glsl");
+        shadowMaskShader = AssetManager.getShader("assets/shaders/shadow-mask.glsl");
 
         lightFramebuffer =
                 AssetManager.createFramebuffer("lightBuffer", Window.get().getWidth(), Window.get().getHeight());
@@ -52,12 +54,17 @@ public class LightRenderer {
         lights.remove(light);
     }
 
+    public void setHasDarkness(boolean hasDarkness) {
+        this.hasDarkness = hasDarkness;
+    }
+
     private void renderLights() {
         lightShader.use();
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
 
         for (LightComponent light : lights) {
+            if (!light.isActive()) continue;
             GameObject gameObject = light.getOwner();
             if (gameObject == null) continue;
 
@@ -98,6 +105,25 @@ public class LightRenderer {
         glBindVertexArray(0);
     }
 
+    private void applyShadow(Framebuffer framebuffer) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_DST_COLOR, GL_ZERO);
+        shadowMaskShader.use();
+
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, framebuffer.getTextureID());
+        shadowMaskShader.uploadTexture("uScene", 1);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, lightFramebuffer.getTextureID());
+        shadowMaskShader.uploadTexture("uLightMask", 0);
+
+        shadowMaskShader.uploadFloat("shadowIntensity", 0.1f);
+        renderFullscreenQuad();
+
+        shadowMaskShader.detach();
+    }
+
     public void renderToFramebuffer(Framebuffer framebuffer) {
         lightFramebuffer.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -125,6 +151,11 @@ public class LightRenderer {
         framebuffer.bind();
         glViewport(0,0, framebuffer.getWidth(), framebuffer.getHeight());
         glEnable(GL_BLEND);
+
+        // shadow mask
+        if (hasDarkness) applyShadow(framebuffer);
+
+        // post-process
         glBlendFunc(GL_ONE, GL_ONE);
         postProcessShader.use();
 

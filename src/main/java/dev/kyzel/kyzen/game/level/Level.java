@@ -18,10 +18,12 @@ public abstract class Level {
 
     protected float x, y;
     protected final int width, height;
+    protected final boolean hasDarkness;
 
-    public Level(Scene scene, Vector4f theme, float x, float y, int width, int height) {
+    public Level(Scene scene, Vector4f theme, boolean hasDarkness, float x, float y, int width, int height) {
         this.scene = scene;
         this.theme = theme;
+        this.hasDarkness = hasDarkness;
         entityList = new ArrayList<>();
         tileList = new ArrayList<>();
         this.x = x;
@@ -46,6 +48,10 @@ public abstract class Level {
     public Tile getTile(int x, int y) {
         if (!isInBounds(x, y)) return null;
         return tileList.get(x + y * width);
+    }
+
+    public boolean hasDarkness() {
+        return hasDarkness;
     }
 
     protected abstract void addEntities();

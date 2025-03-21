@@ -35,6 +35,6 @@ void main() {
     // Attenuation: smoothstep function for the falloff of the light intensity
     float attenuation = 1.0 - smoothstep(0.0, lightRadius * 0.7, distance);
 
-    // Final color with attenuation and ambient light strength
-    FragColor = vec4(lightColor * attenuation * ambientStrength, 1.0);
+    // Output light intensity to alpha channel (more light = higher alpha)
+    FragColor = vec4(lightColor * attenuation * ambientStrength, attenuation);
 }

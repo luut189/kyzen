@@ -28,6 +28,7 @@ public class AssetManager {
         AssetManager.getShader("assets/shaders/screen.glsl");
         AssetManager.getShader("assets/shaders/blur.glsl");
         AssetManager.getShader("assets/shaders/post-process.glsl");
+        AssetManager.getShader("assets/shaders/shadow-mask.glsl");
         AssetManager.getShader("assets/shaders/light.glsl");
         AssetManager.addSpritesheet("assets/textures/99c-font.png", 16, 16, 0);
         AssetManager.addSpritesheet("assets/textures/spritesheet.png", 16, 16, 0);

@@ -7,11 +7,13 @@ public class LightComponent extends Component {
     private float radius;
     private Vector3f color;
     private float intensity;
+    private boolean active;
 
     public LightComponent(float radius, Vector3f color, float intensity) {
         this.radius = radius;
         this.color = color;
         this.intensity = intensity;
+        active = true;
     }
 
     @Override
@@ -46,5 +48,13 @@ public class LightComponent extends Component {
 
     public void setIntensity(float intensity) {
         this.intensity = intensity;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

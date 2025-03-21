@@ -10,7 +10,7 @@ import org.joml.Vector2f;
 public class TestLevel extends Level {
 
     public TestLevel(Scene scene, float x, float y) {
-        super(scene, ColorPalette.getDefaultRGBA(0.1f, 0.1f, 0.2f), x, y, 25, 35);
+        super(scene, ColorPalette.getDefaultRGBA(0.6f, 0.2f, 0.6f), true, x, y, 25, 35);
     }
 
     @Override
