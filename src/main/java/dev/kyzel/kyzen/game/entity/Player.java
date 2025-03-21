@@ -2,6 +2,7 @@ package dev.kyzel.kyzen.game.entity;
 
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
+import dev.kyzel.kyzen.engine.components.LightComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.game.ParticleManager;
 import dev.kyzel.kyzen.game.level.Level;
@@ -24,6 +25,7 @@ public class Player extends Entity {
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
 
         spriteComponent = new SpriteComponent(sheet.getSprite(PLAYER_SPRITE_OFFSET));
+        this.addComponent(new LightComponent(500, ColorPalette.getDefaultRGB(1,1,1), 0.1f));
         this.addComponent(spriteComponent);
     }
 
