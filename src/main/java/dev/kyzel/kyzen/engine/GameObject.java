@@ -99,7 +99,7 @@ public class GameObject {
         return id;
     }
 
-    public float getzIndex() {
+    public float getZIndex() {
         return zIndex;
     }
 }

@@ -267,12 +267,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return textures.contains(texture);
     }
 
-    public float getzIndex() {
+    public float getZIndex() {
         return zIndex;
     }
 
     @Override
     public int compareTo(RenderBatch o) {
-        return Float.compare(zIndex, o.getzIndex());
+        return Float.compare(zIndex, o.getZIndex());
     }
 }

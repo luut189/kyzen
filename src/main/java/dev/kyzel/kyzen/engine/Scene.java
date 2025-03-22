@@ -55,7 +55,7 @@ public abstract class Scene {
             gameObject.start();
             this.renderer.add(gameObject);
         }
-        currentMaxZIndex = Math.max(gameObject.getzIndex(), currentMaxZIndex);
+        currentMaxZIndex = Math.max(gameObject.getZIndex(), currentMaxZIndex);
     }
 
     public void removeGameObject(GameObject gameObject) {

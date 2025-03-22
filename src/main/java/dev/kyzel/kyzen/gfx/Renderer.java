@@ -32,9 +32,9 @@ public class Renderer {
 
     public static void addSpriteToBatches(SpriteComponent sprite, List<RenderBatch> batches) {
         boolean added = false;
-        float spriteZIndex = sprite.getOwner().getzIndex();
+        float spriteZIndex = sprite.getOwner().getZIndex();
         for (RenderBatch renderBatch : batches) {
-            if (renderBatch.hasRoom() && renderBatch.getzIndex() == spriteZIndex) {
+            if (renderBatch.hasRoom() && renderBatch.getZIndex() == spriteZIndex) {
                 Texture texture = sprite.getTexture();
                 if (texture == null || (renderBatch.hasTexture(texture) || renderBatch.hasTextureRoom())) {
                     renderBatch.addSprite(sprite);
