@@ -40,13 +40,13 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final List<Texture> textures;
     private int vaoID, vboID;
     private final int maxBatchSize;
-    private final Shader shader;
+    private final Shader spriteShader;
     private final float zIndex;
 
     private final Framebuffer renderBuffer;
 
     public RenderBatch(int maxBatchSize, float zIndex) {
-        shader = AssetManager.getShader("assets/shaders/default.glsl");
+        spriteShader = AssetManager.getShader("assets/shaders/sprite.glsl");
         sprites = new SpriteComponent[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
@@ -123,7 +123,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 renderBuffer.getWidth(), renderBuffer.getHeight());
         renderToFramebuffer(renderBuffer);
 
-        shader.detach();
+        spriteShader.detach();
     }
 
     private void renderToFramebuffer(Framebuffer framebuffer) {
@@ -146,14 +146,14 @@ public class RenderBatch implements Comparable<RenderBatch> {
             glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
         }
 
-        shader.use();
-        shader.uploadMatrix4f("uProjection", SceneManager.getCurrentScene().getCamera().getProjectionMatrix());
-        shader.uploadMatrix4f("uView", SceneManager.getCurrentScene().getCamera().getViewMatrix());
+        spriteShader.use();
+        spriteShader.uploadMatrix4f("uProjection", SceneManager.getCurrentScene().getCamera().getProjectionMatrix());
+        spriteShader.uploadMatrix4f("uView", SceneManager.getCurrentScene().getCamera().getViewMatrix());
         for (int i = 0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
-        shader.uploadIntArray("uTextures", texSlots);
+        spriteShader.uploadIntArray("uTextures", texSlots);
 
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);

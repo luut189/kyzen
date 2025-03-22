@@ -24,7 +24,7 @@ public class AssetManager {
     private static int fullScreenQuadVAO, fullScreenQuadVBO;
 
     public static void init() {
-        AssetManager.getShader("assets/shaders/default.glsl");
+        AssetManager.getShader("assets/shaders/sprite.glsl");
         AssetManager.getShader("assets/shaders/screen.glsl");
         AssetManager.getShader("assets/shaders/blur.glsl");
         AssetManager.getShader("assets/shaders/post-process.glsl");
