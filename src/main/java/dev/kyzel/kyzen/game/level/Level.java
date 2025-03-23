@@ -61,18 +61,19 @@ public abstract class Level {
         return false;
     }
 
+    private void generateLevel() {
+        addRooms();
+        addRoomsToScene();
+        addEntities();
+    }
+
     protected void addEntities() {
         addPlayer();
     }
 
-    protected abstract void addTiles();
+    protected abstract void addRooms();
 
-    protected void generateLevel() {
-        addTiles();
-        addEntities();
-    }
-
-    protected void addPlayer() {
+    private void addPlayer() {
         currentRoom = roomList.getFirst();
         Vector2f position = new Vector2f();
         Tile cur = currentRoom.getTile((int) Math.floor(position.x), (int) Math.floor(position.y));
@@ -92,6 +93,14 @@ public abstract class Level {
         scene.getCamera().snapToPlayer(p, 0.101f);
         entityList.add(p);
         scene.addGameObject(p);
+    }
+
+    private void addRoomsToScene() {
+        for (Room room : roomList) {
+            for (Tile tile : room.getTiles()) {
+                scene.addGameObject(tile);
+            }
+        }
     }
 
     public boolean collide(Entity e) {

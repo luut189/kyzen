@@ -11,7 +11,7 @@ public class TestLevel extends Level {
     }
 
     @Override
-    protected void addTiles() {
+    protected void addRooms() {
         Room room = new Room(this, position, 25, 35);
         roomList.add(room);
         room.generateTiles();

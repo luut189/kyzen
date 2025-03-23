@@ -15,8 +15,9 @@ public class Room {
 
     private final Level level;
     private final int id, width, height;
-    private Vector2f position;
     private final List<Tile> tiles;
+
+    private Vector2f position;
 
     public Room(Level level, Vector2f position, int width, int height) {
         this.level = level;
@@ -50,7 +51,8 @@ public class Room {
     public float getDistance(Room room) {
         Vector2f middlePoint = getMiddlePoint();
         Vector2f otherMiddlePoint = room.getMiddlePoint();
-        return (float) Math.sqrt(ExtendedMath.pow(middlePoint.x - otherMiddlePoint.x, 2) + ExtendedMath.pow(middlePoint.y - otherMiddlePoint.y, 2));
+        return (float) Math.sqrt(ExtendedMath.pow(middlePoint.x - otherMiddlePoint.x, 2)
+                + ExtendedMath.pow(middlePoint.y - otherMiddlePoint.y, 2));
     }
 
     public void move(Vector2f delta) {
@@ -80,12 +82,11 @@ public class Room {
     }
 
     public float getOverlapDistance(Room other) {
-        float xOverlap =
-                Math.max(0, Math.min(this.position.x + this.width, other.position.x + other.width)
-                        - Math.max(this.position.x, other.position.x));
-        float yOverlap =
-                Math.max(0, Math.min(this.position.y + this.height, other.position.y + other.height)
-                        - Math.max(this.position.y, other.position.y));
+        float xOverlap = Math.max(0, Math.min(this.position.x + this.width, other.position.x + other.width)
+                - Math.max(this.position.x, other.position.x));
+
+        float yOverlap = Math.max(0, Math.min(this.position.y + this.height, other.position.y + other.height)
+                - Math.max(this.position.y, other.position.y));
 
         if (xOverlap > 0 && yOverlap > 0) {
             return Math.min(xOverlap, yOverlap);
@@ -101,7 +102,6 @@ public class Room {
                 Transform transform = new Transform(new Vector2f(gridPos).mul(scale), scale);
                 Tile tile = createAndOrientTile(transform, j, i);
                 tiles.add(tile);
-                SceneManager.getCurrentScene().addGameObject(tile);
             }
         }
         for (int i = 0; i < height; i++) {
