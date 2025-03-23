@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class AssetManager {
     private static int currentID = 0;
+    private static int currentRoomID = 0;
     private static final Map<String, Shader> shaders = new HashMap<>();
     private static final Map<String, Texture> textures = new HashMap<>();
     private static final Map<String, Spritesheet> spritesheets = new HashMap<>();
@@ -36,6 +37,10 @@ public class AssetManager {
 
     public static int getNextID() {
         return currentID++;
+    }
+
+    public static int getNextRoomID() {
+        return currentRoomID++;
     }
 
     private static <T> T getResource(String name, Map<String, T> resourcesMap,

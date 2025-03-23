@@ -18,7 +18,7 @@ public class LevelScene extends Scene {
         this.camera = new Camera(new Vector2f());
         sheet = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
 
-        currentLevel = new TestLevel(this, 0, 0);
+        currentLevel = new TestLevel(this, new Vector2f(0, 0));
         debugText = TextRenderer.create("FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
                         new Transform(new Vector2f(), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))

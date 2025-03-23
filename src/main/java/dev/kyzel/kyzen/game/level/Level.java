@@ -3,7 +3,9 @@ package dev.kyzel.kyzen.game.level;
 import dev.kyzel.kyzen.engine.Scene;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.game.entity.Entity;
+import dev.kyzel.kyzen.game.entity.Player;
 import dev.kyzel.kyzen.game.level.tiles.Tile;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -14,20 +16,20 @@ public abstract class Level {
     protected Scene scene;
     protected final Vector4f theme;
     protected List<Entity> entityList;
-    protected List<Tile> tileList;
+    protected List<Room> roomList;
+    protected Room currentRoom;
 
-    protected float x, y;
+    protected Vector2f position;
     protected final int width, height;
     protected final boolean hasDarkness;
 
-    public Level(Scene scene, Vector4f theme, boolean hasDarkness, float x, float y, int width, int height) {
+    public Level(Scene scene, Vector4f theme, boolean hasDarkness, Vector2f position, int width, int height) {
         this.scene = scene;
         this.theme = theme;
         this.hasDarkness = hasDarkness;
         entityList = new ArrayList<>();
-        tileList = new ArrayList<>();
-        this.x = x;
-        this.y = y;
+        roomList = new ArrayList<>();
+        this.position = position;
         this.width = width;
         this.height = height;
         generateLevel();
@@ -41,15 +43,6 @@ public abstract class Level {
         return height;
     }
 
-    protected boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
-    public Tile getTile(int x, int y) {
-        if (!isInBounds(x, y)) return null;
-        return tileList.get(x + y * width);
-    }
-
     public boolean hasDarkness() {
         return hasDarkness;
     }
@@ -58,7 +51,19 @@ public abstract class Level {
         return theme;
     }
 
-    protected abstract void addEntities();
+    public boolean isAnyRoomOverlap() {
+        for (Room room : roomList) {
+            for (Room otherRoom : roomList) {
+                if (room.equals(otherRoom)) continue;
+                if (room.getOverlapDistance(otherRoom) > 0) return true;
+            }
+        }
+        return false;
+    }
+
+    protected void addEntities() {
+        addPlayer();
+    }
 
     protected abstract void addTiles();
 
@@ -67,38 +72,46 @@ public abstract class Level {
         addEntities();
     }
 
-    protected boolean[] checkDifferentSurroundingTiles(int j, int i, Class<? extends Tile> tileClass) {
-        Tile top = isInBounds(j, i + 1) ? tileList.get(j + (i + 1) * width) : null;
-        Tile bottom = isInBounds(j, i - 1) ? tileList.get(j + (i - 1) * width) : null;
-        Tile left = isInBounds(j - 1, i) ? tileList.get(j - 1 + i * width) : null;
-        Tile right = isInBounds(j + 1, i) ? tileList.get(j + 1 + i * width) : null;
-
-        return new boolean[]{
-                top != null && !tileClass.isInstance(top),
-                bottom != null && !tileClass.isInstance(bottom),
-                left != null && !tileClass.isInstance(left),
-                right != null && !tileClass.isInstance(right)
-        };
+    protected void addPlayer() {
+        currentRoom = roomList.getFirst();
+        Vector2f position = new Vector2f();
+        Tile cur = currentRoom.getTile((int) Math.floor(position.x), (int) Math.floor(position.y));
+        while (cur == null || !cur.isWalkable()) {
+            position.x = (float) Math.floor(Math.random() * currentRoom.getWidth());
+            position.y = (float) Math.floor(Math.random() * currentRoom.getHeight());
+            cur = currentRoom.getTile(Math.round(position.x), Math.round(position.y));
+        }
+        position.add(currentRoom.getPosition()).mul(scene.getObjectScale());
+        System.out.println(position);
+        Player p = new Player(
+                this,
+                new Transform(
+                        position,
+                        scene.getObjectScale()
+                ), 3);
+        scene.getCamera().snapToPlayer(p, 0.101f);
+        entityList.add(p);
+        scene.addGameObject(p);
     }
 
     public boolean collide(Entity e) {
+        System.out.println(currentRoom.getPosition());
         Transform transform = e.getTransform();
         float entityX = transform.position.x;
         float entityY = transform.position.y;
         float entityWidth = transform.scale.x;
         float entityHeight = transform.scale.y;
-        for (Tile t : tileList) {
+        for (Tile t : currentRoom.getTiles()) {
             if (t.isWalkable()) continue;
             Transform tileTransform = t.getTransform();
             float tileX = tileTransform.position.x;
             float tileY = tileTransform.position.y;
             float tileWidth = tileTransform.scale.x;
             float tileHeight = tileTransform.scale.y;
-            if (
-                    entityX < tileX + tileWidth / 2 &&
-                            entityX + entityWidth / 2 > tileX &&
-                            entityY < tileY + tileHeight &&
-                            entityY + entityHeight / 2 > tileY
+            if (entityX < tileX + tileWidth / 2 &&
+                    entityX + entityWidth / 2 > tileX &&
+                    entityY < tileY + tileHeight &&
+                    entityY + entityHeight / 2 > tileY
             ) {
                 return true;
             }

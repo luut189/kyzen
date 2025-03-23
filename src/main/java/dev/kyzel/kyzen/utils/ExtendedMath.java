@@ -1,5 +1,6 @@
 package dev.kyzel.kyzen.utils;
 
+import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -32,14 +33,22 @@ public class ExtendedMath {
 
         radius = (float) Math.sqrt(Math.random()) * radius;
 
-        float x = center.x + radius * (float) Math.cos(angle);
-        float y = center.y + radius * (float) Math.sin(angle);
+        float x = center.x + radius * Math.cos(angle);
+        float y = center.y + radius * Math.sin(angle);
 
         return new Vector2f(x, y);
     }
 
     public static Vector3f toVector3f(Vector4f vector4f) {
         return new Vector3f(vector4f.x, vector4f.y, vector4f.z);
+    }
+
+    public static int getRandomInt(int min, int max) {
+        return (int) (Math.random() * (max - min)) + min;
+    }
+
+    public static double pow(double a, double b) {
+        return java.lang.Math.pow(a, b);
     }
 
 }
