@@ -6,6 +6,7 @@ public class SceneManager {
     private static Scene currentScene;
 
     public static void updateScene(float delta) {
+        TextRenderer.update(delta);
         currentScene.update(delta);
     }
 

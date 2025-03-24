@@ -14,6 +14,7 @@ public class Text {
     private Vector4f color;
     private Vector4f backgroundColor;
     private float lifetime;
+    private float currentLifetime;
     private TextRenderer.Flag flag;
     private boolean fixedPosition;
 
@@ -24,6 +25,7 @@ public class Text {
         this.color = color;
         this.backgroundColor = null;
         this.lifetime = -1;
+        this.currentLifetime = -1;
         this.flag = TextRenderer.Flag.NONE;
         this.fixedPosition = false;
     }
@@ -42,6 +44,10 @@ public class Text {
 
     public float getLifetime() {
         return lifetime;
+    }
+
+    public float getCurrentLifetime() {
+        return currentLifetime;
     }
 
     public Vector4f getBackgroundColor() {
@@ -82,7 +88,12 @@ public class Text {
 
     public Text setLifetime(float lifetime) {
         this.lifetime = lifetime;
+        this.currentLifetime = lifetime;
         return this;
+    }
+
+    public void decreaseLifetime(float delta) {
+        currentLifetime -= delta;
     }
 
     public Text setFlag(TextRenderer.Flag flag) {

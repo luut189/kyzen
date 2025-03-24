@@ -3,7 +3,6 @@ package dev.kyzel.kyzen.gfx;
 import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
-import dev.kyzel.kyzen.engine.components.LifetimeComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.utils.AssetManager;
 import org.joml.Vector2f;
@@ -33,6 +32,16 @@ public class TextRenderer {
         return newText;
     }
 
+    public static void update(float delta) {
+        List<Text> toRemove = new ArrayList<>();
+        for (Text text : textToRender) {
+            if (text.getLifetime() == -1) continue;
+            text.decreaseLifetime(delta);
+            if (text.getCurrentLifetime() < 0) toRemove.add(text);
+        }
+        textToRender.removeAll(toRemove);
+    }
+
     public static void render() {
         for (Text text : textToRender) {
             text.render();
@@ -43,14 +52,12 @@ public class TextRenderer {
         renderText(text.getText(),
                    text.getTransform(),
                    text.getColor(), text.getBackgroundColor(),
-                   text.getLifetime(),
                    text.getFlag());
     }
 
     private static void renderText(String text,
                                    Transform baseTransform,
                                    Vector4f color, Vector4f backgroundColor,
-                                   float lifetime,
                                    Flag flag) {
         Vector2f position = new Vector2f(baseTransform.position);
 
@@ -90,7 +97,6 @@ public class TextRenderer {
                 createGameObject(
                         new Transform(new Vector2f(offset), baseTransform.scale),
                         new SpriteComponent(FONT_SHEET.getSprite(index), shadowColor),
-                        lifetime,
                         zIndex - 0.01f);
             }
             maxChar = Math.max(maxChar, charCount);
@@ -98,7 +104,6 @@ public class TextRenderer {
             createGameObject(
                     new Transform(new Vector2f(position), baseTransform.scale),
                     new SpriteComponent(FONT_SHEET.getSprite(index), color),
-                    lifetime,
                     zIndex);
 
             position.x += baseTransform.scale.x;
@@ -116,7 +121,6 @@ public class TextRenderer {
             createGameObject(
                     new Transform(new Vector2f(baseTransform.position.x, newPositionY), bgScale),
                     new SpriteComponent(backgroundColor),
-                    lifetime,
                     zIndex - (flag == Flag.DOUBLED ? 0.02f : 0.01f));
         }
     }
@@ -145,10 +149,8 @@ public class TextRenderer {
     }
 
     private static void createGameObject(Transform transform,
-                                         SpriteComponent spriteComponent,
-                                         float lifetime, float zIndex) {
+                                         SpriteComponent spriteComponent, float zIndex) {
         GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
-        if (lifetime > 0) gameObject.addComponent(new LifetimeComponent(lifetime));
         objectBatch.add(gameObject);
         Renderer.addSpriteToBatches(spriteComponent, renderBatches);
     }
