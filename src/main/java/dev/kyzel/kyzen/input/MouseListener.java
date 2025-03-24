@@ -50,8 +50,6 @@ public class MouseListener {
     public static void endFrame() {
         get().scrollX = 0;
         get().scrollY = 0;
-        get().lastX = get().xPos;
-        get().lastY = get().yPos;
     }
 
     public static float getX() {
