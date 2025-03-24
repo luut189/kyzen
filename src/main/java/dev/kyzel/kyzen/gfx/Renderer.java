@@ -19,11 +19,13 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class Renderer {
     public static final int MAX_BATCH_SIZE = 100;
     private final List<RenderBatch> batches;
+    private final List<GameObject> currentObjectBatch;
     private final Shader screenShader;
     private final Framebuffer lightBuffer, compositeBuffer;
 
     public Renderer() {
         batches = new ArrayList<>();
+        currentObjectBatch = new ArrayList<>();
         screenShader = AssetManager.getShader("assets/shaders/screen.glsl");
 
         lightBuffer = new Framebuffer(Window.get().getWidth(), Window.get().getHeight());
@@ -54,6 +56,7 @@ public class Renderer {
     }
 
     public void add(GameObject gameObject) {
+        currentObjectBatch.add(gameObject);
         for (SpriteComponent spriteComponent : gameObject.getComponents(SpriteComponent.class)) {
             addSpriteToBatches(spriteComponent, batches);
         }
@@ -71,6 +74,13 @@ public class Renderer {
         if (light != null) {
             LightRenderer.getInstance().removeLight(light);
         }
+    }
+
+    public void cleanup() {
+        for (GameObject gameObject : currentObjectBatch) {
+            remove(gameObject);
+        }
+        currentObjectBatch.clear();
     }
 
     private void remove(SpriteComponent sprite) {
