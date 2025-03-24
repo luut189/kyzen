@@ -10,6 +10,7 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class TextRenderer {
 
@@ -28,6 +29,12 @@ public class TextRenderer {
 
     public static Text create(String text, Transform transform, Vector4f color) {
         Text newText = Text.create(text, transform, color);
+        textToRender.add(newText);
+        return newText;
+    }
+
+    public static Text create(Supplier<String> textSupplier, Transform transform, Vector4f color) {
+        Text newText = Text.create(textSupplier, transform, color);
         textToRender.add(newText);
         return newText;
     }

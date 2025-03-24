@@ -6,9 +6,12 @@ import dev.kyzel.kyzen.engine.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.util.function.Supplier;
+
 public class Text {
 
     private String text;
+    private Supplier<String> textSupplier;
     private Transform transform;
     private final Vector2f baseScale;
     private Vector4f color;
@@ -18,8 +21,7 @@ public class Text {
     private TextRenderer.Flag flag;
     private boolean fixedPosition;
 
-    private Text(String text, Transform transform, Vector4f color) {
-        this.text = text;
+    private Text(Transform transform, Vector4f color) {
         this.transform = transform;
         this.baseScale = transform.scale;
         this.color = color;
@@ -30,8 +32,24 @@ public class Text {
         this.fixedPosition = false;
     }
 
+    private Text(String text, Transform transform, Vector4f color) {
+        this(transform, color);
+        this.text = text;
+        this.textSupplier = null;
+    }
+
+    public Text(Supplier<String> textSupplier, Transform transform, Vector4f color) {
+        this(transform, color);
+        this.text = null;
+        this.textSupplier = textSupplier;
+    }
+
     public static Text create(String text, Transform transform, Vector4f color) {
         return new Text(text, transform, color);
+    }
+
+    public static Text create(Supplier<String> textSupplier, Transform transform, Vector4f color) {
+        return new Text(textSupplier, transform, color);
     }
 
     public boolean isFixedPosition() {
@@ -63,11 +81,18 @@ public class Text {
     }
 
     public String getText() {
-        return text;
+        return (textSupplier == null ? text : textSupplier.get());
     }
 
     public Text setText(String text) {
         this.text = text;
+        this.textSupplier = null;
+        return this;
+    }
+
+    public Text setTextSupplier(Supplier<String> textSupplier) {
+        this.textSupplier = textSupplier;
+        this.text = null;
         return this;
     }
 
