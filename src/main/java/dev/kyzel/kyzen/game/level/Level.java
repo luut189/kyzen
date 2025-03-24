@@ -16,6 +16,7 @@ public abstract class Level {
     protected Scene scene;
     protected final Vector4f theme;
     protected List<Entity> entityList;
+    protected Player player;
     protected List<Room> roomList;
     protected Room currentRoom;
 
@@ -51,6 +52,10 @@ public abstract class Level {
         return theme;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public boolean isAnyRoomOverlap() {
         for (Room room : roomList) {
             for (Room otherRoom : roomList) {
@@ -83,16 +88,15 @@ public abstract class Level {
             cur = currentRoom.getTile(Math.round(position.x), Math.round(position.y));
         }
         position.add(currentRoom.getPosition()).mul(scene.getObjectScale());
-        System.out.println(position);
-        Player p = new Player(
+        this.player = new Player(
                 this,
                 new Transform(
                         position,
                         scene.getObjectScale()
                 ), 3);
-        scene.getCamera().snapToPlayer(p, 0.101f);
-        entityList.add(p);
-        scene.addGameObject(p);
+        scene.getCamera().snapToPlayer(player, 0.101f);
+        entityList.add(player);
+        scene.addGameObject(player);
     }
 
     private void addRoomsToScene() {
@@ -104,7 +108,6 @@ public abstract class Level {
     }
 
     public boolean collide(Entity e) {
-        System.out.println(currentRoom.getPosition());
         Transform transform = e.getTransform();
         float entityX = transform.position.x;
         float entityY = transform.position.y;

@@ -88,8 +88,6 @@ public class Player extends Entity {
             animationComponent.setState(EntityState.ATTACKING);
             ParticleManager.createParticles(1, this, ColorPalette.getDefaultRandomRGBA(), lastDirection);
         }
-        if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
-            SceneManager.getCurrentScene().getCamera().snapToPlayer(this, deltaTime);
     }
 
     @Override
@@ -125,7 +123,6 @@ public class Player extends Entity {
         boolean vertical = direction == Direction.UP || direction == Direction.DOWN;
         boolean horizontal = direction == Direction.LEFT || direction == Direction.RIGHT;
 
-        // TODO: convert camera's coordinates to world's coordinates
         if (vertical) {
             transform.position.y += entitySpeed * deltaTime * dir;
         } else if (horizontal) {

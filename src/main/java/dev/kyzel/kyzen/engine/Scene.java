@@ -4,6 +4,7 @@ import dev.kyzel.kyzen.engine.components.LifetimeComponent;
 import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.Renderer;
 import dev.kyzel.kyzen.gfx.Spritesheet;
+import dev.kyzel.kyzen.input.ControlHandler;
 import dev.kyzel.kyzen.input.MouseListener;
 
 import java.util.ArrayList;
@@ -83,6 +84,8 @@ public abstract class Scene {
         } else if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
             camera.reset();
         }
+        if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
+            camera.snapToPlayer(currentLevel.getPlayer(), delta);
 
         // Camera Dragging Function
         // WARNING: When dragging, there is a chance for the camera to get yeet very far.
