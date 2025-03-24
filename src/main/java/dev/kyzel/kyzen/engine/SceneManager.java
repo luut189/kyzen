@@ -11,7 +11,7 @@ public class SceneManager {
 
     public static void renderScene() {
         TextRenderer.render();
-        currentScene.getRenderer().render();
+        currentScene.render();
         TextRenderer.cleanup();
     }
 

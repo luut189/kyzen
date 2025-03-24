@@ -3,7 +3,6 @@ package dev.kyzel.kyzen.engine;
 import dev.kyzel.kyzen.game.entity.Player;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 public class Camera {
     private final Matrix4f projectionMatrix;
@@ -26,15 +25,8 @@ public class Camera {
     }
 
     public Matrix4f getViewMatrix() {
-        Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
-        Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
-        this.viewMatrix.identity();
-        viewMatrix.lookAt(
-                new Vector3f(position.x, position.y, 20.0f),
-                cameraFront.add(position.x, position.y, 0.0f),
-                cameraUp
-        );
-
+        viewMatrix.identity();
+        viewMatrix.translate(-position.x, -position.y, 0);
         return this.viewMatrix;
     }
 
@@ -51,12 +43,26 @@ public class Camera {
     }
 
     public void setZoom(float newZoom) {
-        this.zoom = Math.max(0.1f, Math.min(newZoom, 5.0f));
+        this.zoom = Math.max(0.5f, Math.min(newZoom, 2.0f));
         adjustProjection();
+    }
+
+    public void zoomIn() {
+        setZoom(zoom * 1.1f);
+    }
+
+    public void zoomOut() {
+        setZoom(zoom * 0.9f);
     }
 
     public void moveCamera(float dx, float dy) {
         this.position.add(dx, dy);
+    }
+
+    public void reset() {
+        setZoom(1.0f);
+        position.x = 0.0f;
+        position.y = 0.0f;
     }
 
     public void snapToPlayer(Player player, float deltaTime) {
@@ -67,21 +73,25 @@ public class Camera {
         float targetY = player.transform.position.y - (height / 2f) / zoom;
 
         // Apply interpolation
-        position.x += (targetX - position.x) * speed * deltaTime;
-        position.y += (targetY - position.y) * speed * deltaTime;
+        moveCamera((targetX - position.x) * speed * deltaTime, (targetY - position.y) * speed * deltaTime);
     }
 
-    public void reset() {
-        setZoom(1.0f);
-        position.x = 0.0f;
-        position.y = 0.0f;
-    }
+    public boolean isNotInView(GameObject gameObject) {
+        int windowWidth = Window.get().getWidth();
+        int windowHeight = Window.get().getHeight();
+        Transform transform = gameObject.getTransform();
+        float entityLeft = transform.position.x;
+        float entityRight = transform.position.x + transform.scale.x;
+        float entityBottom = transform.position.y;
+        float entityTop = transform.position.y + transform.scale.y;
 
-    public void zoomIn() {
-        setZoom(zoom * 1.1f);
-    }
+        float offset = SceneManager.getCurrentScene().getObjectScale();
+        float camLeft = position.x - offset;
+        float camRight = position.x + (windowWidth / zoom) + offset;
+        float camBottom = position.y - offset;
+        float camTop = position.y + (windowHeight / zoom) + offset;
 
-    public void zoomOut() {
-        setZoom(zoom * 0.9f);
+        return (!(entityRight > camLeft) || !(entityLeft < camRight)) ||
+                (!(entityTop > camBottom) || !(entityBottom < camTop));
     }
 }

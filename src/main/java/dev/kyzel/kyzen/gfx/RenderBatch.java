@@ -117,7 +117,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return false;
     }
 
-
     public void render() {
         glViewport(0, 0,
                 renderBuffer.getWidth(), renderBuffer.getHeight());
@@ -132,19 +131,15 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        boolean needReBuffer = false;
         for (int i = 0; i < numSprites; i++) {
             SpriteComponent sprite = sprites[i];
             if (sprite.isDirty()) {
                 loadVertexProperties(i);
                 sprite.setClean();
-                needReBuffer = true;
             }
         }
-        if (needReBuffer) {
-            glBindBuffer(GL_ARRAY_BUFFER, vboID);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-        }
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
 
         spriteShader.use();
         spriteShader.uploadMatrix4f("uProjection", SceneManager.getCurrentScene().getCamera().getProjectionMatrix());

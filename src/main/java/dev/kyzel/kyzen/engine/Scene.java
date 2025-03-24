@@ -29,7 +29,6 @@ public abstract class Scene {
     public void start() {
         for (GameObject gameObject : gameObjectList) {
             gameObject.start();
-            this.renderer.add(gameObject);
         }
         isRunning = true;
     }
@@ -47,13 +46,25 @@ public abstract class Scene {
         }
     }
 
+    public void render() {
+        List<GameObject> added = new ArrayList<>();
+        for (GameObject gameObject : gameObjectList) {
+            if (camera.isNotInView(gameObject)) continue;
+            this.renderer.add(gameObject);
+            added.add(gameObject);
+        }
+        this.renderer.render();
+        for (GameObject gameObject : added) {
+            this.renderer.remove(gameObject);
+        }
+    }
+
     public void addGameObject(GameObject gameObject) {
         if (!isRunning) {
             gameObjectList.add(gameObject);
         } else {
             gameObjectList.add(gameObject);
             gameObject.start();
-            this.renderer.add(gameObject);
         }
         currentMaxZIndex = Math.max(gameObject.getZIndex(), currentMaxZIndex);
     }

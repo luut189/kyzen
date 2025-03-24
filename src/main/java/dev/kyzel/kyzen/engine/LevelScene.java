@@ -31,6 +31,7 @@ public class LevelScene extends Scene {
         currentDelta += delta;
         super.update(delta);
         for (GameObject ob : gameObjectList) {
+            if (camera.isNotInView(ob)) continue;
             ob.update(delta);
         }
         if (currentDelta > 1f) {
