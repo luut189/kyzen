@@ -3,6 +3,7 @@ package dev.kyzel.kyzen.gfx;
 import dev.kyzel.kyzen.engine.Camera;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
+import dev.kyzel.kyzen.engine.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -13,7 +14,7 @@ public class Text {
     private String text;
     private Supplier<String> textSupplier;
     private Transform transform;
-    private final Vector2f baseScale;
+    private final Transform baseTransform;
     private Vector4f color;
     private Vector4f backgroundColor;
     private float lifetime;
@@ -23,7 +24,7 @@ public class Text {
 
     private Text(Transform transform, Vector4f color) {
         this.transform = transform;
-        this.baseScale = transform.scale;
+        this.baseTransform = transform.copy();
         this.color = color;
         this.backgroundColor = null;
         this.lifetime = -1;
@@ -32,7 +33,7 @@ public class Text {
         this.fixedPosition = false;
     }
 
-    private Text(String text, Transform transform, Vector4f color) {
+    public Text(String text, Transform transform, Vector4f color) {
         this(transform, color);
         this.text = text;
         this.textSupplier = null;
@@ -42,18 +43,6 @@ public class Text {
         this(transform, color);
         this.text = null;
         this.textSupplier = textSupplier;
-    }
-
-    public static Text create(String text, Transform transform, Vector4f color) {
-        return new Text(text, transform, color);
-    }
-
-    public static Text create(Supplier<String> textSupplier, Transform transform, Vector4f color) {
-        return new Text(textSupplier, transform, color);
-    }
-
-    public boolean isFixedPosition() {
-        return fixedPosition;
     }
 
     public TextRenderer.Flag getFlag() {
@@ -132,10 +121,35 @@ public class Text {
     }
 
     public void render() {
-        if (isFixedPosition()) {
+        // make the text viewable when placed at edge
+        Transform transformToUse = baseTransform.copy();
+        float xOffset = 0, yOffset = 0;
+
+        // Adjust for Y position at screen boundaries
+        if (baseTransform.position.y == 0 || baseTransform.position.y == Window.get().getHeight()) {
+            int multiplier = (baseTransform.position.y == 0) ? 1 : -1;
+            for (char c : getText().toCharArray()) {
+                if (c == '\n') yOffset += baseTransform.scale.y * multiplier;
+            }
+        }
+
+        // Adjust for X position at right screen boundary
+        if (baseTransform.position.x == Window.get().getWidth()) {
+            for (char c : getText().toCharArray()) {
+                if (c == ' ') xOffset -= baseTransform.scale.x * 0.5f;
+                else if (c == '\n') xOffset = 0;
+                else xOffset -= baseTransform.scale.x;
+            }
+        }
+
+        transformToUse.position.x += xOffset;
+        transformToUse.position.y += yOffset;
+
+        if (fixedPosition) {
             Camera camera = SceneManager.getCurrentScene().getCamera();
-            transform.position = new Vector2f(camera.getPosition()).add(new Vector2f(0, transform.scale.y));
-            transform.scale = new Vector2f(baseScale).mul(1 / camera.getZoom());
+            transform.position = new Vector2f(transformToUse.position).mul(1 / camera.getZoom())
+                    .add(camera.getPosition());
+            transform.scale = new Vector2f(transformToUse.scale).mul(1 / camera.getZoom());
         }
         TextRenderer.renderText(this);
     }

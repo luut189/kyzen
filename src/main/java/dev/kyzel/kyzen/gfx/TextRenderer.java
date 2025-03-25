@@ -28,15 +28,20 @@ public class TextRenderer {
     private static final List<RenderBatch> renderBatches = new ArrayList<>();
 
     public static Text create(String text, Transform transform, Vector4f color) {
-        Text newText = Text.create(text, transform, color);
+        Text newText = new Text(text, transform, color);
         textToRender.add(newText);
         return newText;
     }
 
     public static Text create(Supplier<String> textSupplier, Transform transform, Vector4f color) {
-        Text newText = Text.create(textSupplier, transform, color);
+        Text newText = new Text(textSupplier, transform, color);
         textToRender.add(newText);
         return newText;
+    }
+
+    public static void addText(Text text) {
+        if (textToRender.contains(text)) return;
+        textToRender.add(text);
     }
 
     public static void update(float delta) {
@@ -57,9 +62,9 @@ public class TextRenderer {
 
     public static void renderText(Text text) {
         renderText(text.getText(),
-                   text.getTransform(),
-                   text.getColor(), text.getBackgroundColor(),
-                   text.getFlag());
+                text.getTransform(),
+                text.getColor(), text.getBackgroundColor(),
+                text.getFlag());
     }
 
     private static void renderText(String text,
