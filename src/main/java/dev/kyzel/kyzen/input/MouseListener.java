@@ -48,6 +48,8 @@ public class MouseListener {
     }
 
     public static void endFrame() {
+        get().lastX = get().xPos;
+        get().lastY = get().yPos;
         get().scrollX = 0;
         get().scrollY = 0;
     }

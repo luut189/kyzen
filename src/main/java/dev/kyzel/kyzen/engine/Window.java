@@ -171,6 +171,7 @@ public class Window {
             while (delta >= 1) {
                 float deltaTime = 1.0f / tickPerSecond;
                 SceneManager.updateScene(deltaTime);
+                MouseListener.endFrame();
                 delta--;
                 tickCount++;
             }
@@ -180,8 +181,6 @@ public class Window {
                 SceneManager.renderScene();
                 frameCount++;
                 lastFrameTime = now;
-
-                MouseListener.endFrame();
                 glfwSwapBuffers(glfwWindow);
             }
 
