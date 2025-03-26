@@ -43,7 +43,7 @@ public class Camera {
     }
 
     public void setZoom(float newZoom) {
-        this.zoom = Math.max(0.5f, Math.min(newZoom, 2.0f));
+        this.zoom = Math.max(0.1f, Math.min(newZoom, 2.0f));
         adjustProjection();
     }
 
