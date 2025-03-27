@@ -56,7 +56,7 @@ public class Camera {
     }
 
     public void moveCamera(float dx, float dy) {
-        this.position.add(dx, dy);
+        this.position.add(dx, dy).round();
     }
 
     public void reset() {
