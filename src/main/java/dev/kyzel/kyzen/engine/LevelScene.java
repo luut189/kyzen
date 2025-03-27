@@ -16,7 +16,7 @@ public class LevelScene extends Scene {
 
         currentLevel = new TestLevel(this, new Vector2f(0, 0));
         TextRenderer.create(() -> "FPS: " + Window.get().getCurrentFPS() + "\nTPS: " + Window.get().getCurrentTick(),
-                        new Transform(new Vector2f(), objectScale / 2),
+                        new Transform(new Vector2f(0, Window.get().getHeight()), objectScale / 2),
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
                 .setFlag(TextRenderer.Flag.DOUBLED)
                 .setFixedPosition(true);

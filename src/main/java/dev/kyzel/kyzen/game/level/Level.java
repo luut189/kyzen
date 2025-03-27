@@ -21,27 +21,16 @@ public abstract class Level {
     protected Room currentRoom;
 
     protected Vector2f position;
-    protected final int width, height;
     protected final boolean hasDarkness;
 
-    public Level(Scene scene, Vector4f theme, boolean hasDarkness, Vector2f position, int width, int height) {
+    public Level(Scene scene, Vector4f theme, boolean hasDarkness, Vector2f position) {
         this.scene = scene;
         this.theme = theme;
         this.hasDarkness = hasDarkness;
         entityList = new ArrayList<>();
         roomList = new ArrayList<>();
         this.position = position;
-        this.width = width;
-        this.height = height;
         generateLevel();
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public boolean hasDarkness() {
