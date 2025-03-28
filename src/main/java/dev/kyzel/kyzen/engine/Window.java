@@ -218,7 +218,7 @@ public class Window {
         vpY = (int) (((float) screenHeight / 2f) - ((float) aspectHeight / 2f));
 
         SceneManager.getCurrentScene().camera.adjustProjection();
-        SceneManager.getCurrentScene().renderer.resize(aspectWidth, aspectHeight);
+        SceneManager.getCurrentScene().getRenderer().resize(aspectWidth, aspectHeight);
         LightRenderer.getInstance().resize(aspectWidth, aspectHeight);
     }
 

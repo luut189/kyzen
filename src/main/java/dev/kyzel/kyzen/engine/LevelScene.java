@@ -1,6 +1,5 @@
 package dev.kyzel.kyzen.engine;
 
-import dev.kyzel.kyzen.game.ParticleManager;
 import dev.kyzel.kyzen.game.level.TestLevel;
 import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.TextRenderer;
@@ -20,16 +19,6 @@ public class LevelScene extends Scene {
                         ColorPalette.getDefaultRGBA(1, 0.23f, 0.6f))
                 .setFlag(TextRenderer.Flag.DOUBLED)
                 .setFixedPosition(true);
-    }
-
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-        for (GameObject ob : gameObjectList) {
-            if (camera.isNotInView(ob)) continue;
-            ob.update(delta);
-        }
-        ParticleManager.addAllParticles();
     }
 
 }
