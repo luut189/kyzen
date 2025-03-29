@@ -21,6 +21,7 @@ public class Player extends Entity {
         direction = Direction.DOWN;
         lastDirection = direction;
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
+        health = 10;
 
         spriteComponent = new SpriteComponent(sheet.getSprite(PLAYER_SPRITE_OFFSET));
         this.addComponent(new LightComponent(500, ExtendedMath.toVector3f(level.getTheme()), 0.4f));

@@ -65,6 +65,10 @@ public abstract class Level {
         addPlayer();
     }
 
+    public void removeEntity(Entity entity) {
+        entityList.remove(entity);
+    }
+
     protected abstract void addRooms();
 
     private void addPlayer() {

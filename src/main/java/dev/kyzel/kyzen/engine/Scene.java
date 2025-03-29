@@ -2,6 +2,7 @@ package dev.kyzel.kyzen.engine;
 
 import dev.kyzel.kyzen.engine.components.LifetimeComponent;
 import dev.kyzel.kyzen.game.ParticleManager;
+import dev.kyzel.kyzen.game.entity.Entity;
 import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.Renderer;
 import dev.kyzel.kyzen.gfx.Spritesheet;
@@ -39,6 +40,13 @@ public abstract class Scene {
         Iterator<GameObject> iterator = gameObjectList.iterator();
         while (iterator.hasNext()) {
             GameObject gameObject = iterator.next();
+            if (gameObject instanceof Entity && ((Entity) gameObject).isDead()) {
+                iterator.remove();
+                currentLevel.removeEntity((Entity) gameObject);
+                removeGameObject(gameObject);
+                continue;
+            }
+
             LifetimeComponent lifetimeComponent = gameObject.getComponent(LifetimeComponent.class);
             if (lifetimeComponent != null && lifetimeComponent.isExpired()) {
                 iterator.remove();
