@@ -3,11 +3,13 @@ package dev.kyzel.kyzen.input;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
-public class MouseListener {
+public class MouseListener implements InputListener {
     private static MouseListener instance;
     private double scrollX, scrollY;
     private double xPos, yPos, lastX, lastY;
     private final boolean[] mouseButtonPressed = new boolean[3];
+    private final boolean[] mouseButtonDown = new boolean[3];
+    private int lastMouseButton;
     private boolean isDragging;
 
     private MouseListener() {
@@ -36,10 +38,13 @@ public class MouseListener {
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
-            if (button < get().mouseButtonPressed.length) get().mouseButtonPressed[button] = true;
+            if (button < get().mouseButtonDown.length) get().mouseButtonDown[button] = true;
         } else if (action == GLFW_RELEASE) {
-            if (button < get().mouseButtonPressed.length) get().mouseButtonPressed[button] = false;
+            if (button < get().mouseButtonDown.length) get().mouseButtonDown[button] = false;
         }
+
+        get().mouseButtonPressed[button] = get().isDown(button) && button != get().lastMouseButton;
+        get().lastMouseButton = button;
     }
 
     public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
@@ -90,8 +95,15 @@ public class MouseListener {
         return get().isDragging;
     }
 
-    public static boolean mouseButtonDown(int button) {
+    @Override
+    public boolean isPressed(int button) {
         if (button < get().mouseButtonPressed.length) return get().mouseButtonPressed[button];
+        return false;
+    }
+
+    @Override
+    public boolean isDown(int button) {
+        if (button < get().mouseButtonDown.length) return get().mouseButtonDown[button];
         return false;
     }
 }

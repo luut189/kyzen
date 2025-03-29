@@ -10,10 +10,7 @@ import dev.kyzel.kyzen.gfx.ColorPalette;
 import dev.kyzel.kyzen.gfx.Sprite;
 import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.input.ControlHandler;
-import dev.kyzel.kyzen.input.MouseListener;
 import dev.kyzel.kyzen.utils.ExtendedMath;
-
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class Player extends Entity {
 
@@ -82,15 +79,6 @@ public class Player extends Entity {
     }
 
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_1) && direction == Direction.NONE) {
-            animationComponent.setState(EntityState.ATTACKING);
-            ParticleManager.createParticles(1, this, ColorPalette.getDefaultRandomRGBA(), lastDirection);
-        }
-    }
-
-    @Override
     protected void updateDirection() {
         Direction previousDirection = direction;
 
@@ -108,12 +96,12 @@ public class Player extends Entity {
 
         if (direction != previousDirection) {
             lastDirection = previousDirection != Direction.NONE ? previousDirection : lastDirection;
+        }
 
-            if (direction == Direction.NONE) {
-                animationComponent.setState(EntityState.IDLE);
-            } else {
-                animationComponent.setState(EntityState.MOVING);
-            }
+        if (direction == Direction.NONE) {
+            animationComponent.setState(EntityState.IDLE);
+        } else {
+            animationComponent.setState(EntityState.MOVING);
         }
     }
 
@@ -127,6 +115,14 @@ public class Player extends Entity {
             transform.position.y += entitySpeed * deltaTime * dir;
         } else if (horizontal) {
             transform.position.x += entitySpeed * deltaTime * dir;
+        }
+    }
+
+    @Override
+    protected void attack() {
+        if (ControlHandler.PLAYER_ATTACK.down() && direction == Direction.NONE) {
+            animationComponent.setState(EntityState.ATTACKING);
+            ParticleManager.createParticles(1, this, ColorPalette.getDefaultRandomRGBA(), lastDirection);
         }
     }
 }

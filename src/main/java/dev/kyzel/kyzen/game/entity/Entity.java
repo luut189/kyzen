@@ -32,6 +32,7 @@ public abstract class Entity extends GameObject {
         float lastPosX = transform.position.x;
         float lastPosY = transform.position.y;
         move(deltaTime);
+        attack();
         if (level.collide(this)) {
             transform.position.x = lastPosX;
             transform.position.y = lastPosY;
@@ -42,4 +43,6 @@ public abstract class Entity extends GameObject {
     protected abstract void updateDirection();
 
     protected abstract void move(float deltaTime);
+
+    protected abstract void attack();
 }

@@ -2,7 +2,7 @@ package dev.kyzel.kyzen.input;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class KeyListener {
+public class KeyListener implements InputListener {
     private static KeyListener instance;
     private final boolean[] keyPressed = new boolean[GLFW_KEY_LAST + 1];
     private final boolean[] keyDown = new boolean[GLFW_KEY_LAST + 1];
@@ -27,15 +27,17 @@ public class KeyListener {
             get().keyDown[key] = false;
         }
 
-        get().keyPressed[key] = isKeyDown(key) && key != get().lastKey;
+        get().keyPressed[key] = get().isDown(key) && key != get().lastKey;
         get().lastKey = key;
     }
 
-    public static boolean isKeyDown(int key) {
+    @Override
+    public boolean isDown(int key) {
         return get().keyDown[key];
     }
 
-    public static boolean isKeyPressed(int key) {
+    @Override
+    public boolean isPressed(int key) {
         return get().keyPressed[key];
     }
 }

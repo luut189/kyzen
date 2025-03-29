@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public abstract class Scene {
 
     protected Camera camera;
@@ -84,7 +82,7 @@ public abstract class Scene {
             camera.zoomIn();
         } else if (MouseListener.getScrollY() < 0) {
             camera.zoomOut();
-        } else if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
+        } else if (ControlHandler.RESET_CAMERA.pressed()) {
             camera.reset();
         }
         if (ControlHandler.SNAP_CAMERA_TO_PLAYER.down())
@@ -94,7 +92,7 @@ public abstract class Scene {
         // WARNING: When dragging, there is a chance for the camera to get yeet very far.
         //          You can click the middle mouse button to reset the camera.
         float speed = 1.5f * objectScale * (1 / camera.getZoom());
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
+        if (ControlHandler.DRAG.down()) {
             camera.moveCamera(MouseListener.getDeltaX() * delta * speed, -MouseListener.getDeltaY() * delta * speed);
         }
     }
