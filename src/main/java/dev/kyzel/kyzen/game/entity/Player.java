@@ -18,8 +18,6 @@ public class Player extends Entity {
 
     public Player(Level level, Transform transform, float zIndex) {
         super(level, transform, zIndex);
-        direction = Direction.DOWN;
-        lastDirection = direction;
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
         health = 10;
 
@@ -81,8 +79,6 @@ public class Player extends Entity {
 
     @Override
     protected void updateDirection() {
-        Direction previousDirection = direction;
-
         if (ControlHandler.UP.down()) {
             direction = Direction.UP;
         } else if (ControlHandler.DOWN.down()) {
@@ -93,29 +89,6 @@ public class Player extends Entity {
             direction = Direction.RIGHT;
         } else {
             direction = Direction.NONE;
-        }
-
-        if (direction != previousDirection) {
-            lastDirection = previousDirection != Direction.NONE ? previousDirection : lastDirection;
-        }
-
-        if (direction == Direction.NONE) {
-            animationComponent.setState(EntityState.IDLE);
-        } else {
-            animationComponent.setState(EntityState.MOVING);
-        }
-    }
-
-    @Override
-    protected void move(float deltaTime) {
-        float dir = (direction == Direction.UP || direction == Direction.RIGHT) ? 1 : -1;
-        boolean vertical = direction == Direction.UP || direction == Direction.DOWN;
-        boolean horizontal = direction == Direction.LEFT || direction == Direction.RIGHT;
-
-        if (vertical) {
-            transform.position.y += entitySpeed * deltaTime * dir;
-        } else if (horizontal) {
-            transform.position.x += entitySpeed * deltaTime * dir;
         }
     }
 

@@ -20,6 +20,8 @@ public abstract class Entity extends GameObject {
     public Entity(Level level, Transform transform, float zIndex) {
         super(transform, zIndex);
         this.level = level;
+        direction = Direction.DOWN;
+        lastDirection = direction;
         animationComponent = new EntityAnimationComponent();
         initAnimationFrames();
         this.addComponent(animationComponent);
@@ -31,7 +33,18 @@ public abstract class Entity extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         isDead = health <= 0;
+
+        Direction previousDirection = direction;
         updateDirection();
+        if (direction != previousDirection) {
+            lastDirection = previousDirection != Direction.NONE ? previousDirection : lastDirection;
+        }
+        if (direction == Direction.NONE) {
+            animationComponent.setState(EntityState.IDLE);
+        } else {
+            animationComponent.setState(EntityState.MOVING);
+        }
+
         float lastPosX = transform.position.x;
         float lastPosY = transform.position.y;
         move(deltaTime);
@@ -57,7 +70,17 @@ public abstract class Entity extends GameObject {
 
     protected abstract void updateDirection();
 
-    protected abstract void move(float deltaTime);
+    protected void move(float deltaTime) {
+        float dir = (direction == Direction.UP || direction == Direction.RIGHT) ? 1 : -1;
+        boolean vertical = direction == Direction.UP || direction == Direction.DOWN;
+        boolean horizontal = direction == Direction.LEFT || direction == Direction.RIGHT;
+
+        if (vertical) {
+            transform.position.y += entitySpeed * deltaTime * dir;
+        } else if (horizontal) {
+            transform.position.x += entitySpeed * deltaTime * dir;
+        }
+    }
 
     protected abstract void attack();
 }
