@@ -21,7 +21,8 @@ public class TextRenderer {
 
     @SuppressWarnings("SpellCheckingInspection")
     public static final String LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[],.?:;\"";
-    public static final Spritesheet FONT_SHEET = AssetManager.getSpritesheet("assets/textures/spritesheet.png");
+    public static final Spritesheet FONT_SHEET =
+            AssetManager.getSpritesheet("assets/textures/press-start-font.png");
 
     private static final List<GameObject> objectBatch = new ArrayList<>();
     private static final List<Text> textToRender = new ArrayList<>();

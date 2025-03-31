@@ -6,9 +6,9 @@ import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
 import org.joml.Vector4f;
 
-import static dev.kyzel.kyzen.gfx.Spritesheet.FONT_TEXTURE_NUM;
-
 public abstract class Tile extends GameObject {
+
+    private static final int BORDER_OFFSET = 8;
 
     protected int spriteIndex;
     protected Sprite sprite;
@@ -31,22 +31,26 @@ public abstract class Tile extends GameObject {
         return isWalkable;
     }
 
+    public void setWalkable(boolean walkable) {
+        isWalkable = walkable;
+    }
+
     // 0 - top
     // 1 - bottom
     // 2 - left
     // 3 - right
     public void setToBorder(boolean[] directions, Vector4f color) {
         if (directions[0] && directions[2]) {
-            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8), color));
+            this.addComponent(new SpriteComponent(sheet.getSprite(BORDER_OFFSET), color));
         }
         if (directions[0] && directions[3]) {
-            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipHorizontally(), color));
+            this.addComponent(new SpriteComponent(sheet.getSprite(BORDER_OFFSET).flipHorizontally(), color));
         }
         if (directions[1] && directions[2]) {
-            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipVertically(), color));
+            this.addComponent(new SpriteComponent(sheet.getSprite(BORDER_OFFSET).flipVertically(), color));
         }
         if (directions[1] && directions[3]) {
-            this.addComponent(new SpriteComponent(sheet.getSprite(FONT_TEXTURE_NUM + 8).flipHorizontally().flipVertically(), color));
+            this.addComponent(new SpriteComponent(sheet.getSprite(BORDER_OFFSET).flipHorizontally().flipVertically(), color));
         }
     }
 
