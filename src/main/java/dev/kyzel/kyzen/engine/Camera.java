@@ -69,8 +69,8 @@ public class Camera {
         float speed = 10f;
         float width = Window.get().getWidth();
         float height = Window.get().getHeight();
-        float targetX = player.transform.position.x - (width / 2f) / zoom;
-        float targetY = player.transform.position.y - (height / 2f) / zoom;
+        float targetX = (player.transform.position.x + player.transform.scale.x / 2f) - (width / 2f) / zoom;
+        float targetY = (player.transform.position.y + player.transform.scale.y / 2f) - (height / 2f) / zoom;
 
         // Apply interpolation
         moveCamera((targetX - position.x) * speed * deltaTime, (targetY - position.y) * speed * deltaTime);
