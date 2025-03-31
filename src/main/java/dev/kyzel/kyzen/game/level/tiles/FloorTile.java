@@ -3,13 +3,12 @@ package dev.kyzel.kyzen.game.level.tiles;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
 import dev.kyzel.kyzen.gfx.Sprite;
-import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.utils.ExtendedMath;
 import org.joml.Vector4f;
 
 public class FloorTile extends Tile {
 
-    private static final int FLOOR_OFFSET_START = Spritesheet.FONT_TEXTURE_NUM + 2;
+    private static final int FLOOR_OFFSET_START = 2;
 
     // these weights also tell the randomizer how many indices are there
     private static final float[] WEIGHTS = {0.1f, 0.1f, 0.9f};
