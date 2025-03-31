@@ -14,7 +14,7 @@ import dev.kyzel.kyzen.utils.ExtendedMath;
 
 public class Player extends Entity {
 
-    private static final int PLAYER_SPRITE_OFFSET = Spritesheet.FONT_TEXTURE_NUM + Spritesheet.TILE_TEXTURE_NUM;
+    private static final int PLAYER_SPRITE_OFFSET = Spritesheet.TILE_TEXTURE_NUM;
 
     public Player(Level level, Transform transform, float zIndex) {
         super(level, transform, zIndex);

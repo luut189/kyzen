@@ -2,13 +2,12 @@ package dev.kyzel.kyzen.game.level.tiles;
 
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
-import dev.kyzel.kyzen.gfx.Spritesheet;
 import dev.kyzel.kyzen.utils.ExtendedMath;
 import org.joml.Vector4f;
 
 public abstract class LiquidTile extends AnimatedTile {
 
-    private static final int LIQUID_OFFSET = Spritesheet.FONT_TEXTURE_NUM + 5;
+    private static final int LIQUID_OFFSET = 5;
     private static final int NUM_SPRITE = 3;
     private static final float[] WEIGHTS = {0.6f, 0.2f, 0.2f};
 

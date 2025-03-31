@@ -33,6 +33,7 @@ public class AssetManager {
         AssetManager.getShader("assets/shaders/light.glsl");
         AssetManager.addSpritesheet("assets/textures/99c-font.png", 16, 16, 0);
         AssetManager.addSpritesheet("assets/textures/spritesheet.png", 16, 16, 0);
+        AssetManager.addSpritesheet("assets/textures/press-start-font.png", 16, 16, 0);
     }
 
     public static int getNextID() {
