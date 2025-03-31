@@ -1,6 +1,7 @@
 package dev.kyzel.kyzen.engine;
 
 import dev.kyzel.kyzen.gfx.LightRenderer;
+import dev.kyzel.kyzen.gfx.TextRenderer;
 import dev.kyzel.kyzen.input.ControlHandler;
 import dev.kyzel.kyzen.input.KeyListener;
 import dev.kyzel.kyzen.input.MouseListener;
@@ -219,6 +220,7 @@ public class Window {
 
         SceneManager.getCurrentScene().camera.adjustProjection();
         SceneManager.getCurrentScene().getRenderer().resize(aspectWidth, aspectHeight);
+        TextRenderer.resize(aspectWidth, aspectHeight);
         LightRenderer.getInstance().resize(aspectWidth, aspectHeight);
     }
 

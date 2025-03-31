@@ -161,6 +161,12 @@ public class TextRenderer {
         objectBatch.clear();
     }
 
+    public static void resize(int width, int height) {
+        for (RenderBatch renderBatch : renderBatches) {
+            renderBatch.resize(width, height);
+        }
+    }
+
     private static void createGameObject(Transform transform,
                                          SpriteComponent spriteComponent, float zIndex) {
         GameObject gameObject = new GameObject(transform, zIndex).addComponent(spriteComponent);
