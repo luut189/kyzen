@@ -2,6 +2,7 @@ package dev.kyzel.kyzen.game.level;
 
 import dev.kyzel.kyzen.engine.Scene;
 import dev.kyzel.kyzen.engine.Transform;
+import dev.kyzel.kyzen.game.CollisionDetection;
 import dev.kyzel.kyzen.game.entity.Entity;
 import dev.kyzel.kyzen.game.entity.Player;
 import dev.kyzel.kyzen.game.level.tiles.Tile;
@@ -101,25 +102,13 @@ public abstract class Level {
     }
 
     public boolean collide(Entity e) {
-        Transform transform = e.getTransform();
-        float entityX = transform.position.x;
-        float entityY = transform.position.y;
-        float entityWidth = transform.scale.x;
-        float entityHeight = transform.scale.y;
         for (Tile t : currentRoom.getTiles()) {
             if (t.isWalkable()) continue;
-            Transform tileTransform = t.getTransform();
-            float tileX = tileTransform.position.x;
-            float tileY = tileTransform.position.y;
-            float tileWidth = tileTransform.scale.x;
-            float tileHeight = tileTransform.scale.y;
-            if (entityX < tileX + tileWidth / 2 &&
-                    entityX + entityWidth / 2 > tileX &&
-                    entityY < tileY + tileHeight &&
-                    entityY + entityHeight / 2 > tileY
-            ) {
-                return true;
-            }
+            if (CollisionDetection.collide(e, t)) return true;
+        }
+        for (Entity entity : entityList) {
+            if (e.equals(entity)) continue;
+            if (CollisionDetection.collide(e, entity)) return true;
         }
         return false;
     }

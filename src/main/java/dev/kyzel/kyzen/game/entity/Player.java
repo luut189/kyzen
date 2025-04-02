@@ -4,6 +4,7 @@ import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.LightComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.AABB;
 import dev.kyzel.kyzen.game.ParticleManager;
 import dev.kyzel.kyzen.game.level.Level;
 import dev.kyzel.kyzen.gfx.ColorPalette;
@@ -20,6 +21,7 @@ public class Player extends Entity {
         super(level, transform, zIndex);
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 3f;
         health = 10;
+        aabb = new AABB(16, 0, transform.scale.x - 16 * 2, transform.scale.y - 32);
 
         spriteComponent = new SpriteComponent(sheet.getSprite(PLAYER_SPRITE_OFFSET));
         this.addComponent(new LightComponent(500, ExtendedMath.toVector3f(level.getTheme()), 0.4f));

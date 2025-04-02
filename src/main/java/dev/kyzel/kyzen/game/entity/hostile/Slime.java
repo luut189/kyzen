@@ -3,6 +3,7 @@ package dev.kyzel.kyzen.game.entity.hostile;
 import dev.kyzel.kyzen.engine.SceneManager;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.AABB;
 import dev.kyzel.kyzen.game.entity.Direction;
 import dev.kyzel.kyzen.game.entity.EntityState;
 import dev.kyzel.kyzen.game.level.Level;
@@ -16,6 +17,7 @@ public class Slime extends Hostile {
         super(level, transform, zIndex);
         health = 10;
         entitySpeed = SceneManager.getCurrentScene().getObjectScale() * 1.5f;
+        aabb = new AABB(16, 20, transform.scale.x - 16 * 2, transform.scale.y - 20 * 2);
 
         Vector4f color = ColorPalette.getDefaultRandomRGBA();
         spriteComponent = new SpriteComponent(sheet.getSprite(ENEMY_SPRITE_OFFSET), color);

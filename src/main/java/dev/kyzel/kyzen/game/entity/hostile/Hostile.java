@@ -8,8 +8,7 @@ import dev.kyzel.kyzen.gfx.Spritesheet;
 
 public abstract class Hostile extends Entity {
 
-    protected static int ENEMY_SPRITE_OFFSET =
-            Spritesheet.FONT_TEXTURE_NUM + Spritesheet.TILE_TEXTURE_NUM + Spritesheet.PLAYER_SPRITE_NUM;
+    protected static int ENEMY_SPRITE_OFFSET = Spritesheet.TILE_TEXTURE_NUM + Spritesheet.PLAYER_SPRITE_NUM;
 
     protected float currentDelta = 0f;
     protected float directionChangeInterval = 2f;

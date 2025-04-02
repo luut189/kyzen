@@ -4,6 +4,7 @@ import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.EntityAnimationComponent;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.AABB;
 import dev.kyzel.kyzen.game.level.Level;
 
 public abstract class Entity extends GameObject {
@@ -13,6 +14,7 @@ public abstract class Entity extends GameObject {
     protected Direction lastDirection, direction;
     protected Level level;
 
+    protected AABB aabb;
     protected float entitySpeed;
     protected int health;
     protected boolean isDead;
@@ -22,6 +24,7 @@ public abstract class Entity extends GameObject {
         this.level = level;
         direction = Direction.DOWN;
         lastDirection = direction;
+        aabb = new AABB(0, 0, transform.scale.x, transform.scale.y);
         animationComponent = new EntityAnimationComponent();
         initAnimationFrames();
         this.addComponent(animationComponent);
@@ -54,6 +57,10 @@ public abstract class Entity extends GameObject {
             transform.position.y = lastPosY;
         }
         spriteComponent.setSprite(animationComponent.getSprite(direction != Direction.NONE ? direction : lastDirection));
+    }
+
+    public AABB getAABB() {
+        return aabb;
     }
 
     public void setHealth(int health) {

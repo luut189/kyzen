@@ -3,6 +3,7 @@ package dev.kyzel.kyzen.game.level.tiles;
 import dev.kyzel.kyzen.engine.GameObject;
 import dev.kyzel.kyzen.engine.Transform;
 import dev.kyzel.kyzen.engine.components.SpriteComponent;
+import dev.kyzel.kyzen.game.AABB;
 import dev.kyzel.kyzen.gfx.Sprite;
 import org.joml.Vector4f;
 
@@ -13,9 +14,11 @@ public abstract class Tile extends GameObject {
     protected int spriteIndex;
     protected Sprite sprite;
     protected boolean isWalkable = false;
+    protected AABB aabb;
 
     public Tile(Transform transform, float zIndex) {
         super(transform, zIndex);
+        aabb = new AABB(0, 0, transform.scale.x, transform.scale.y);
     }
 
     @Override
@@ -25,6 +28,10 @@ public abstract class Tile extends GameObject {
         if (spriteComponent != null) {
             sprite = spriteComponent.getSprite();
         }
+    }
+
+    public AABB getAABB() {
+        return aabb;
     }
 
     public boolean isWalkable() {
