@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class EntityAnimationComponent extends Component {
 
-    private final Map<Direction, Sprite[]> idleSprites = new HashMap<>();
+    private final Map<Direction, Sprite[]> idleFrames = new HashMap<>();
     private final Map<Direction, Sprite[]> animationFrames = new HashMap<>();
     private final Map<Direction, Sprite[]> attackFrames = new HashMap<>();
     private EntityState currentState;
@@ -20,7 +20,7 @@ public class EntityAnimationComponent extends Component {
 
     public void addFrames(EntityState state, Direction direction, Sprite[] sprites) {
         if (state == EntityState.IDLE) {
-            idleSprites.put(direction, sprites);
+            idleFrames.put(direction, sprites);
         } else if (state == EntityState.MOVING) {
             animationFrames.put(direction, sprites);
         } else if (state == EntityState.ATTACKING) {
@@ -60,14 +60,15 @@ public class EntityAnimationComponent extends Component {
     }
 
     public Sprite getSprite(Direction direction) {
+        Sprite[] sprites;
         if (currentState == EntityState.IDLE) {
-            return idleSprites.get(direction)[0];
+            sprites = idleFrames.get(direction);
         } else if (currentState == EntityState.MOVING) {
-            Sprite[] sprites = animationFrames.get(direction);
-            return sprites[currentFrame % sprites.length];
+            sprites = animationFrames.get(direction);
         } else {
-            return attackFrames.get(direction)[0];
+            sprites = attackFrames.get(direction);
         }
+        return sprites[currentFrame % sprites.length];
     }
 
     public void setState(final EntityState state) {
