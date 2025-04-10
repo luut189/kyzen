@@ -43,7 +43,8 @@ public class Camera {
     }
 
     public void setZoom(float newZoom) {
-        this.zoom = Math.max(0.1f, Math.min(newZoom, 2.0f));
+        float roundedZoom = Math.round(newZoom * 10.0f) / 10.0f;
+        this.zoom = Math.max(0.1f, Math.min(roundedZoom, 2.0f));
         adjustProjection();
     }
 
@@ -56,7 +57,7 @@ public class Camera {
     }
 
     public void moveCamera(float dx, float dy) {
-        this.position.add(dx, dy).round();
+        this.position.add(dx, dy);
     }
 
     public void reset() {
