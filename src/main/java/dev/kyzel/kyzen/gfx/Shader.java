@@ -24,11 +24,11 @@ public class Shader {
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
             int index = source.indexOf("#type") + 6;
-            int eol = source.indexOf("\r\n", index);
+            int eol = source.indexOf("\n", index);
             String firstPattern = source.substring(index, eol).trim();
 
             index = source.indexOf("#type", eol) + 6;
-            eol = source.indexOf("\r\n", index);
+            eol = source.indexOf("\n", index);
             String secondPattern = source.substring(index, eol).trim();
 
             if (firstPattern.equals("vertex")) {
